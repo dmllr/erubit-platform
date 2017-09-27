@@ -1,0 +1,46 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryDark"
+    tools:context="a.erubit.platform.android.ProgressFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".4"
+        android:layout_margin="@dimen/general_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@android:id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/john_smith"
+            android:layout_margin="@dimen/general_margin"
+            android:gravity="center"
+            android:textSize="@dimen/text_head_1"
+            android:textColor="@color/colorTextPrimary"/>
+        <TextView
+            android:id="@android:id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:text="@string/john_smith"
+            android:textSize="@dimen/text_enlarged"
+            android:lines="4"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorTextPrimary" />
+
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".6"
+        android:layout_marginBottom="@dimen/general_margin" />
+
+</LinearLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="grant_permission_bar">Режим микрообучения требует разрешения вывода поверх других окон. Нажмите сюда, чтобы выдать разрешение.</string>
+    <string name="grant_permission_dialog">Режим микрообучения требует разрешения вывода поверх других окон. Без этого разрешения только традиционное обучение будет доступно.\n\nПожалуйста нажмите ОК чтобы перейти к настройкам разрешений.</string>
+    <string name="next_time_notice"><![CDATA[<p>Пожалуйста нажмите кнопку "Понятно" ниже.</p>]]></string>
+    <string name="understood">Понятно</string>
+    <string name="camera">Камера</string>
+    <string name="not_now">⨯ Закрыть</string>
+    <string name="do_you_know_the_answer">Знаете ответ?</string>
+    <string name="swipe_left">СВАЙП ВЛЕВО</string>
+    <string name="swipe_right">СВАЙП ВПРАВО</string>
+    <string name="swipe_to_dismiss">СМАХНИТЕ ЧТОБЫ ЗАКРЫТЬ</string>
+    <string name="i_was_mistaken">Я ОШИБСЯ</string>
+
+    <string name="disable_for">Запрет на</string>
+    <string name="_1h">1ч</string>
+    <string name="_2h">2ч</string>
+    <string name="_4h">4ч</string>
+
+    <string name="unopened">Не открыто</string>
+    <string name="finished">Завершено</string>
+    <string name="progress_explanation">"%2$d%% изучено\nи\n%1$d%% знакомо"</string>
+    <string name="set_lesson_progress_explanation">"В этом уроке\n%1$d изучается\n%2$d знакомо\n%3$d изучено"</string>
+
+    <string name="practice">Упражн.</string>
+    <string name="stats">Подр.</string>
+
+    <string name="unknown">Неизвестно</string>
+    <string name="studying">Изучается</string>
+    <string name="familiar">Знакомо</string>
+    <string name="learned">Изучено</string>
+    <string name="learned_well">Запомнено</string>
+
+    <string name="boastful_description">Лучший выбор для ненавязчивого, но неизбежного обучения</string>
+
+    <string name="sign_in">Войти</string>
+    <string name="action_settings">Параметры</string>
+    <string name="share_my_progress">Поделиться прогрессом</string>
+
+    <string name="preferences">Параметры</string>
+    <string name="general">Общие</string>
+    <string name="appearance">Вид и поведение</string>
+
+    <string name="enable_hide_variants">Скрывать варианты ответов</string>
+    <string name="enable_hide_variants_summary">Варианты будут скрыты, пока вы не будете готовы дать ответ</string>
+    <string name="enable_on_screen_unlock">Действия при разблокировке</string>
+    <string name="enable_on_screen_unlock_summary">Вы можете запретить появление экрана микрообучения при разблокировке устройства</string>
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <dimen name="general_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="half_margin">8dp</dimen>
+
+    <dimen name="general_item_height">64dp</dimen>
+
+    <dimen name="text_explanation">14sp</dimen>
+    <dimen name="text_regular">16sp</dimen>
+    <dimen name="text_enlarged">20sp</dimen>
+    <dimen name="text_head_1">24sp</dimen>
+    <dimen name="text_head_2">22sp</dimen>
+    <dimen name="sentiment_icon">64dp</dimen>
+
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+</resources>

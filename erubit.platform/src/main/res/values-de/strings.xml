@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="swipe_to_dismiss">SWIPE ZUM ZERSTÖREN</string>
+    <string name="_1h">1S</string>
+    <string name="_2h">2S</string>
+    <string name="_4h">4S</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="appearance">Aussehen und Verhalten</string>
+    <string name="boastful_description">Die beste Wahl für unauffälliges und unvermeidliches Lernen</string>
+    <string name="camera">Kamera</string>
+    <string name="disable_for">Deaktivieren für</string>
+    <string name="do_you_know_the_answer">Kennst Sie die Antwort?</string>
+    <string name="enable_hide_variants">Antwortoptionen ausblenden</string>
+    <string name="enable_hide_variants_summary">Antwortoptionen werden versteckt, bis du bereit bist, Antwort zu bekommen</string>
+    <string name="enable_on_screen_unlock">Aktivieren auf dem entsperren</string>
+    <string name="enable_on_screen_unlock_summary">Sie können das Aussehen eines Trainingsbildschirms deaktivieren, wenn das Gerät entsperrt ist</string>
+    <string name="familiar">Familiär</string>
+    <string name="finished">Fertig</string>
+    <string name="general">General</string>
+    <string name="grant_permission_bar">Der Mikro-Lernmodus erfordert eine Zeichnung über andere App-Berechtigungen. Tippen Sie hier, um es zu gewähren.</string>
+    <string name="grant_permission_dialog">Der Mikro-Lernmodus erfordert eine Zeichnung über andere App-Berechtigungen. Ohne Genehmigung wird nur ein traditionelles Lernen zur Verfügung stehen. Bitte tippen\n\nSie jetzt auf OK und erlauben dann das Zeichnen über andere Apps auf dem nächsten Bildschirm.</string>
+    <string name="i_was_mistaken">ICH LAG FALSCH</string>
+    <string name="learned">Gelernt</string>
+    <string name="learned_well">Fiel ein</string>
+    <string name="next_time_notice"><![CDATA[<p>Sie bitte den "Verstanden" Button unten berühren.</p>]]></string>
+    <string name="not_now">⨯ Schließen</string>
+    <string name="practice">Trainieren</string>
+    <string name="preferences">Präferenzen</string>
+    <string name="progress_explanation">"%2$d%% sehr bekannt\nund\n%1$d%% familiär"</string>
+    <string name="set_lesson_progress_explanation">"In dieser Lektion\n%1$d studieren\n%2$d vertraute\n%3$d bekannt"</string>
+    <string name="share_my_progress">Teilen Sie meine Fortschritte</string>
+    <string name="sign_in">Anmelden</string>
+    <string name="stats">Stat</string>
+    <string name="studying">Studieren</string>
+    <string name="swipe_left">SWIPE LINKS</string>
+    <string name="swipe_right">SWIPE RECHTS</string>
+    <string name="understood">Verstanden</string>
+    <string name="unknown">Unbekannt</string>
+    <string name="unopened">Ungeöffnet</string>
+</resources>

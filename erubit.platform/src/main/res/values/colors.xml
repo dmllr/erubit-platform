@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextPrimaryDark">#282828</color>
+    <color name="colorTextOnCard">#c000</color>
+    <color name="color_bg_light">#eceff1</color>
+    <color name="color_bg_dark">#2e3032</color>
+
+    <color name="color_chkbtn_inactive">#66FF9800</color>
+    <color name="color_chkbtn_active">@color/color_orange</color>
+    <color name="color_chkbtn_pressed">@color/color_orange_dark</color>
+
+    <color name="color_white">#ffffff</color>
+    <color name="color_white_66">#aaffffff</color>
+    <color name="color_white_50">#7fffffff</color>
+    <color name="color_white_25">#55ffffff</color>
+    <color name="color_purple">#ffaa66cc</color>
+    <color name="color_purple_dark">#ff8855aa</color>
+    <color name="color_blue">#ff0099cc</color>
+    <color name="color_blue_dark">#ff00719b</color>
+    <color name="color_green">#ff99cc00</color>
+    <color name="color_green_dark">#ff6d9b00</color>
+    <color name="color_orange">#ffb74d</color>
+    <color name="color_orange_dark">#c47500</color>
+    <color name="color_red">#ffff4444</color>
+    <color name="color_red_dark">#ffcd3a3a</color>
+</resources>

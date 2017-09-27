@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<t.PercentageLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView style="@style/card"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/courseFace"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@android:id/icon"
+                android:layout_marginStart="8dp" >
+
+                <TextView
+                    android:id="@android:id/text1"
+                    android:text="@string/john_smith"
+                    android:textColor="@color/colorTextPrimaryDark"
+                    android:textSize="@dimen/text_regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@android:id/content"
+                    android:gravity="center" />
+                <FrameLayout style="?android:attr/buttonBarStyle"
+                    android:id="@android:id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true">
+                    <Button style="?android:attr/buttonBarButtonStyle"
+                        android:id="@+id/button_practice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/practice"
+                        android:textColor="?attr/colorAccent"
+                        android:layout_margin="@dimen/general_margin"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+            </RelativeLayout>
+            <ProgressBar style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                         android:id="@android:id/progress"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_marginBottom="-6dp"
+                         android:elevation="10dp"
+                         android:progress="33"
+                         android:secondaryProgress="44"
+                         android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</t.PercentageLayout>

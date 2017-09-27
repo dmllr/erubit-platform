@@ -1,0 +1,10 @@
+{
+  "id": "704476e5a9bc4d8c89a9012b92de131a",
+  "title": "Welcome",
+  "type": "Welcome",
+  "description": [
+    "<h1>Demo course</h1>",
+    "<h2>Description</h2>",
+    "<p>Course welcome text.</p>"
+  ]
+}

@@ -1,0 +1,22 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preferences">
+
+    <PreferenceCategory
+        android:title="@string/appearance">
+
+        <CheckBoxPreference
+            android:key="enabled_on_unlock"
+            android:defaultValue="true"
+            android:title="@string/enable_on_screen_unlock"
+            android:summary="@string/enable_on_screen_unlock_summary" />
+
+        <CheckBoxPreference
+            android:key="enabled_shadowing_variants"
+            android:defaultValue="true"
+            android:title="@string/enable_hide_variants"
+            android:summary="@string/enable_hide_variants_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

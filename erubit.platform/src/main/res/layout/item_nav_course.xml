@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<t.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    app:show_mode="pull_out"
+    android:layout_height="@dimen/general_item_height" >
+
+    <LinearLayout style="?android:attr/buttonBarStyle"
+        android:id="@+id/bottom_wrapper"
+        android:orientation="horizontal"
+        android:background="?attr/colorPrimaryDark"
+        android:layout_width="180dp"
+        android:layout_height="match_parent" >
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/train_btn"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/practice"
+            android:layout_width="0dp" />
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/stats_btn"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/stats"
+            android:layout_width="0dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_bg_light" >
+        <t.MorphButton.CheckMorphButton
+            android:id="@+id/checkButton"
+            android:layout_alignParentStart="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <RelativeLayout
+            tools:targetApi="lollipop"
+            android:elevation="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@android:id/icon"
+                android:src="@drawable/ic_done"
+                android:scaleType="center"
+                android:layout_width="@dimen/general_item_height"
+                android:layout_height="@dimen/general_item_height" />
+            <RelativeLayout
+                android:id="@+id/courseFace"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@android:id/icon"
+                android:layout_marginStart="8dp" >
+
+                <TextView
+                    android:id="@android:id/text1"
+                    android:text="@string/john_smith"
+                    android:textColor="@color/colorTextPrimaryDark"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center" />
+                <ImageView
+                    android:id="@+id/infoButton"
+                    app:srcCompat="@drawable/ic_info"
+                    android:tint="@color/color_white"
+                    android:scaleType="center"
+                    android:layout_width="@dimen/general_item_height"
+                    android:layout_height="@dimen/general_item_height"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</t.SwipeLayout>

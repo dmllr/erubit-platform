@@ -1,0 +1,15 @@
+{
+  "id": "1a4d4adfe2be47c5928d2f08aa8c0706",
+  "title": "Demo course",
+  "description": [
+    "<h1>Demo course</h1>",
+    "<h2>Description</h2>",
+    "<p>It's made for demo purposes only.</p>"
+  ],
+  "lessons": [
+    "demo_welcome",
+    "demo_1",
+    "demo_2",
+    "demo_3"
+  ]
+}

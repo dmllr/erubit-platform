@@ -1,0 +1,12 @@
+{
+  "id": "471fc60e13024b6c85db5cb25f511569",
+  "title": "Japanese greetings",
+  "type": "Set",
+  "set": [
+    { "i": 0, "c": "ohayō gozaimasu", "m": "good morning" },
+    { "i": 1, "c": "konnichi-wa", "m": "hello" },
+    { "i": 2, "c": "komban-wa", "m": "good evening" },
+    { "i": 3, "c": "oyasumi-nasai", "m": "goodnight" }
+  ],
+  "variants": ["good morning", "hello", "good evening", "goodnight", "goodbye", "hi", "welcome"]
+}
