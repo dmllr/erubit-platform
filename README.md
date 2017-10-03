@@ -72,7 +72,9 @@ This is your main activity. Update manifest:
 4. Create educational courses
 
 #### How to create courses
-All courses is Android `raw` resource files.
+All courses are Android `raw` resource files.
+
+Sample courses, developed for the [Erubit Kana](https://play.google.com/store/apps/details?id=com.erubit.kana) app are located in [this Github project](https://github.com/erubit-open/kana-courses).
  
 Multilingual apps are supported by default by Android's localization principles.
 
