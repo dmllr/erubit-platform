@@ -136,7 +136,7 @@ References are used for [multilingual support][#multilingual].
   ]
 }
 ```
-* `"type"` should be `"Set"`
+* `"type"` should be `"Set"`. Another types of lessons are sampled in `Demo` project.
 * `"set"` is a list of characters to learn
 * `"variants"` is a list of possible wrong answers
 
