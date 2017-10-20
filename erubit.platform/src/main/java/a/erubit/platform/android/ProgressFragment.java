@@ -22,6 +22,7 @@ import a.erubit.platform.course.CourseManager;
 import a.erubit.platform.course.Lesson;
 import a.erubit.platform.course.SetLesson;
 import a.erubit.platform.course.WelcomeLesson;
+import u.U;
 
 public class ProgressFragment extends Fragment {
 
@@ -122,7 +123,7 @@ public class ProgressFragment extends Fragment {
             }
             if (holder instanceof ContentViewHolder) {
                 ContentItem item = ((ContentItem) mList.get(position));
-                ((ContentViewHolder) holder).textTitle.setText(item.mText);
+                ((ContentViewHolder) holder).textTitle.setText(U.defurigana(item.mText));
                 ((ContentViewHolder) holder).textKnowledge.setText(item.mKnowledge);
             }
         }
