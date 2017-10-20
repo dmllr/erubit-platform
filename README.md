@@ -19,7 +19,7 @@ Each time the device screen unlocked, user will see a new word or piece of infor
 It takes only a couple of seconds, and the more effectively the training goes.
 
 #### Screenshots
-<img src="img/ss1.png" height="240"><img src="img/ss2.png" height="240"><img src="img/ss3.png" height="240"><img src="img/ss4.png" height="240"><img src="img/ss5.png" height="240"><img src="img/ss6.png" height="240"><img src="img/ss7.png" height="240"><img src="img/ss8.png" height="240">
+<img src="img/ss1.png" height="240"> <img src="img/ss2.png" height="240"> <img src="img/ss3.png" height="240"> <img src="img/ss4.png" height="240"> <img src="img/ss5.png" height="240"> <img src="img/ss6.png" height="240"> <img src="img/ss7.png" height="240"> <img src="img/ss8.png" height="240">
 
 ### Operation manual
 #### How to create applications
