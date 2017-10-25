@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a.erubit.platform.R;
+import a.erubit.platform.course.BunchLesson;
 import a.erubit.platform.course.Course;
 import a.erubit.platform.course.CourseManager;
 import a.erubit.platform.course.Lesson;
@@ -71,9 +72,10 @@ public class ProgressFragment extends Fragment {
                 if (lesson instanceof WelcomeLesson) {
                     mList.add(new ContentItem(lesson.getProgress().getExplanation(), ""));
                 }
-                if (lesson instanceof SetLesson) { // also PhraseLesson and CharacterLesson here
-                    ((SetLesson)lesson).loadHeavyContent();
-                    for (SetLesson.Item item: ((SetLesson)lesson).mSet) {
+                if (lesson instanceof BunchLesson) {
+                    // including SetLesson, VocabularyLesson, PhraseLesson and CharacterLesson
+                    ((BunchLesson)lesson).loadHeavyContent();
+                    for (BunchLesson.Item item: ((BunchLesson)lesson).mSet) {
                         mList.add(new ContentItem(item.character, getKnowledgeText(item.knowledgeLevel)));
                     }
                 }
