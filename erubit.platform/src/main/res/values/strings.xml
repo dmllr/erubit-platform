@@ -30,7 +30,6 @@
     <string name="set_lesson_progress_explanation">"In this lesson\n%1$d studying\n%2$d familiar\n%3$d known"</string>
 
     <string name="practice">Practice</string>
-    <string name="stats">Stats</string>
 
     <string name="unknown">Unknown</string>
     <string name="studying">Studying</string>

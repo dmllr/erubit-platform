@@ -23,7 +23,6 @@
     <string name="set_lesson_progress_explanation">"В этом уроке\n%1$d изучается\n%2$d знакомо\n%3$d изучено"</string>
 
     <string name="practice">Упражн.</string>
-    <string name="stats">Подр.</string>
 
     <string name="unknown">Неизвестно</string>
     <string name="studying">Изучается</string>

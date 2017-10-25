@@ -129,16 +129,16 @@ public class CoursesFragment extends Fragment {
                     mListener.onCourseInteraction(holder.mCourse, CourseInteractionAction.PRACTICE);
                 }
             });
+            view.findViewById(R.id.info_btn).setOnClickListener(v -> {
+                if (mListener != null) {
+                    ViewHolder holder = (ViewHolder)view.getTag();
+                    mListener.onCourseInteraction(holder.mCourse, CourseInteractionAction.SHOW_INFO);
+                }
+            });
             view.findViewById(R.id.stats_btn).setOnClickListener(v -> {
                 if (mListener != null) {
                     ViewHolder holder = (ViewHolder)view.getTag();
                     mListener.onCourseInteraction(holder.mCourse, CourseInteractionAction.SHOW_STATS);
-                }
-            });
-            view.findViewById(R.id.infoButton).setOnClickListener(v -> {
-                if (mListener != null) {
-                    ViewHolder holder = (ViewHolder)view.getTag();
-                    mListener.onCourseInteraction(holder.mCourse, CourseInteractionAction.SHOW_INFO);
                 }
             });
 

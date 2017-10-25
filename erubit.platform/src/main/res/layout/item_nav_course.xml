@@ -13,18 +13,22 @@
         android:background="?attr/colorPrimaryDark"
         android:layout_width="180dp"
         android:layout_height="match_parent" >
-        <Button style="?android:attr/buttonBarButtonStyle"
+        <ImageView
             android:id="@+id/train_btn"
+            app:srcCompat="@drawable/ic_training"
+            android:tint="@color/color_white"
+            android:scaleType="center"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="@string/practice"
-            android:layout_width="0dp" />
-        <Button style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/stats_btn"
+            android:layout_width="0dp"/>
+        <ImageView
+            android:id="@+id/info_btn"
+            app:srcCompat="@drawable/ic_info"
+            android:tint="@color/color_white"
+            android:scaleType="center"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="@string/stats"
-            android:layout_width="0dp" />
+            android:layout_width="0dp"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -65,8 +69,8 @@
                     android:layout_height="match_parent"
                     android:gravity="start|center" />
                 <ImageView
-                    android:id="@+id/infoButton"
-                    app:srcCompat="@drawable/ic_info"
+                    android:id="@+id/stats_btn"
+                    app:srcCompat="@drawable/ic_stats"
                     android:tint="@color/color_white"
                     android:scaleType="center"
                     android:layout_width="@dimen/general_item_height"
