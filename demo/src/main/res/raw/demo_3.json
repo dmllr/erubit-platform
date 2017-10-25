@@ -3,8 +3,8 @@
   "title": "一二七九人",
   "type": "Character",
   "set": [
-    { "i": 0, "c": "{人:ひと}", "m": "man, person, human being, people" },
-    { "i": 3, "c": "{一:いち}", "m": "one, first, beginning" },
+    { "i": 0, "c": "{人:ひと}", "m": "man : person : human being : people" },
+    { "i": 3, "c": "{一:いち}", "m": "one : first : beginning" },
     { "i": 6, "c": "{七:しち}", "m": "seven" },
     { "i": 7, "c": "{九:きゅう}", "m": "nine" },
     { "i": 8, "c": "{二:に}", "m": "two" }

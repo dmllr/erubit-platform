@@ -367,21 +367,22 @@ public class InteractionManager {
         }
 
         view.findViewById(android.R.id.button1).setOnClickListener(v -> {
-            String answer = "";
+            StringBuilder answer = new StringBuilder();
             String separator = " ";
             if (lesson instanceof CharacterLesson)
-                separator = ", ";
+                separator = " : ";
 
             for (int k = 0; k < fllPhrase.getChildCount() - 1; k++) {
-                answer += (answer.length() > 0 ? separator : "")
-                        + ((TextView) fllPhrase.getChildAt(k).findViewById(android.R.id.text1)).getText();
+                answer
+                    .append(answer.length() > 0 ? separator : "")
+                    .append(((TextView) fllPhrase.getChildAt(k).findViewById(android.R.id.text1)).getText());
             }
 
             boolean solved = false;
             if (lesson instanceof PhraseLesson)
-                solved = U.equals(problem.meaning, answer);
+                solved = U.equals(problem.meaning, answer.toString());
             if (lesson instanceof CharacterLesson)
-                solved = U.equalsIndependent(problem.meaning, answer);
+                solved = U.equalsIndependent(problem.meaning, answer.toString());
 
 
             problem.attempt(solved);

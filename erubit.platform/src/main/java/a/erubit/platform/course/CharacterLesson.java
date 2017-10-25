@@ -37,7 +37,7 @@ public class CharacterLesson extends BunchLesson {
         Random random = new Random();
         int apxSize = 4 + random.nextInt(4);
 
-        String regex = ",\\s+";
+        String regex = "\\s+:\\s+";
         Problem problem = new Problem(this, problemItem);
         String[] words = U.defurigana(problem.meaning).split(regex);
         problem.variants = new String[words.length + apxSize];

@@ -101,7 +101,7 @@ public class U {
     }
 
     public static boolean equalsIndependent(String s1, String s2) {
-        String regex = ",\\s+";
+        String regex = "\\s+:\\s+";
         String[] w1 = defurigana(s1).split(regex);
         String[] w2 = defurigana(s2).split(regex);
         Arrays.sort(w1);
