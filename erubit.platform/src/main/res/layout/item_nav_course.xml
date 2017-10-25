@@ -71,7 +71,7 @@
                 <ImageView
                     android:id="@+id/stats_btn"
                     app:srcCompat="@drawable/ic_stats"
-                    android:tint="@color/color_white"
+                    android:tint="@color/color_purple"
                     android:scaleType="center"
                     android:layout_width="@dimen/general_item_height"
                     android:layout_height="@dimen/general_item_height"
