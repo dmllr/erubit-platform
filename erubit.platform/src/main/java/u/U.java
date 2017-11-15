@@ -1,5 +1,6 @@
 package u;
 
+import android.content.Context;
 import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
@@ -24,10 +25,10 @@ import java.util.Random;
 import a.erubit.platform.android.App;
 
 public class U {
-    public static String loadStringResource(int id) throws IOException {
+    public static String loadStringResource(Context context, int id) throws IOException {
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
-        try (InputStream is = App.getContext().getResources().openRawResource(id)) {
+        try (InputStream is = context.getResources().openRawResource(id)) {
             Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             int n;
             while ((n = reader.read(buffer)) != -1) {
@@ -110,7 +111,7 @@ public class U {
         return Arrays.equals(w1, w2);
     }
 
-    public static String getStringValue(JSONObject jo, String property) throws JSONException {
+    public static String getStringValue(Context context, JSONObject jo, String property) throws JSONException {
         String value = "";
         if (jo.has(property)) {
             Object djo = jo.get(property);
@@ -122,9 +123,9 @@ public class U {
                 value = (String)djo;
                 if (value.startsWith(C.RESREF)) {
                     String resourceName = value.substring(C.RESREF.length());
-                    int resourceId = App.getContext().getResources().getIdentifier(resourceName, "raw", App.getContext().getPackageName());
+                    int resourceId = context.getResources().getIdentifier(resourceName, "raw", context.getPackageName());
                     try {
-                        value = U.loadStringResource(resourceId);
+                        value = U.loadStringResource(context, resourceId);
                     } catch (IOException e) {
                         value = "";
                     }

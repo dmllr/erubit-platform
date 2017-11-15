@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import a.erubit.platform.R;
-import a.erubit.platform.android.App;
 import a.erubit.platform.course.CharacterLesson;
 import a.erubit.platform.course.CourseManager;
 import a.erubit.platform.course.Lesson;
@@ -34,7 +33,6 @@ import t.TinyDB;
 import u.C;
 import u.U;
 
-import static a.erubit.platform.android.App.getContext;
 
 public class InteractionManager {
     @SuppressLint("StaticFieldLeak")
@@ -65,8 +63,8 @@ public class InteractionManager {
         void onInteraction(InteractionEvent event);
     }
 
-    public void initialize() {
-        createInteractionViews();
+    public void initialize(Context context) {
+        createInteractionViews(context);
     }
 
     @SuppressWarnings("deprecation")
@@ -85,61 +83,59 @@ public class InteractionManager {
                         0
                 ),
                 PixelFormat.TRANSLUCENT);
-
-        createInteractionViews();
     }
 
-    private void createInteractionViews() {
-        mInteractionViewWelcome = createWelcomeInteractionView();
-        mInteractionViewSetCourse = createChooseInteractionView();
-        mInteractionViewPhraseCourse = createPhraseInteractionView();
+    private void createInteractionViews(Context context) {
+        mInteractionViewWelcome = createWelcomeInteractionView(context);
+        mInteractionViewSetCourse = createChooseInteractionView(context);
+        mInteractionViewPhraseCourse = createPhraseInteractionView(context);
     }
 
-    private View createWelcomeInteractionView() {
-        return View.inflate(App.getContext(), R.layout.view_welcome, null);
+    private View createWelcomeInteractionView(Context context) {
+        return View.inflate(context, R.layout.view_welcome, null);
     }
 
-    private View createChooseInteractionView() {
-        View view = View.inflate(App.getContext(), R.layout.view_interaction_choose, null);
+    private View createChooseInteractionView(Context context) {
+        View view = View.inflate(context, R.layout.view_interaction_choose, null);
 
-        String packageName = App.getContext().getPackageName();
+        String packageName = context.getPackageName();
         mAnswerLabels = new int[C.NUMBER_OF_ANSWERS];
         for (int k = 0; k < C.NUMBER_OF_ANSWERS; k++)
-            mAnswerLabels[k] = App.getContext().getResources().getIdentifier("a" + String.valueOf(k), "id", packageName);
+            mAnswerLabels[k] = context.getResources().getIdentifier("a" + String.valueOf(k), "id", packageName);
 
         return view;
     }
 
-    private View createPhraseInteractionView() {
-        return View.inflate(App.getContext(), R.layout.view_interaction_phrase, null);
+    private View createPhraseInteractionView(Context context) {
+        return View.inflate(context, R.layout.view_interaction_phrase, null);
     }
 
-    public View getInteractionView(InteractionListener listener) {
-        Lesson lesson = CourseManager.i().getNextLesson();
+    public View getInteractionView(Context context, InteractionListener listener) {
+        Lesson lesson = CourseManager.i().getNextLesson(context);
         if (lesson != null)
-            return getInteractionView(lesson, listener);
+            return getInteractionView(context, lesson, listener);
         return null;
     }
 
-    public View getInteractionView(Lesson lesson, InteractionListener listener) {
-        Lesson.PresentableDescriptor pd = lesson.getNextPresentable();
+    public View getInteractionView(Context context, Lesson lesson, InteractionListener listener) {
+        Lesson.PresentableDescriptor pd = lesson.getNextPresentable(context);
 
         if (pd.mStatus == Lesson.Status.LESSON_LEARNED) {
             // We got lesson with interaction enabled, but not presentable,
             // lesson may be learned or familiar at that moment.
             // Recalculate and save it's progress
-            ProgressManager.i().save(lesson);
+            ProgressManager.i().save(context, lesson);
 
             // Will take next lesson and presentable
-            lesson = CourseManager.i().getNextLesson();
+            lesson = CourseManager.i().getNextLesson(context);
             if (lesson != null)
-                pd = lesson.getNextPresentable();
+                pd = lesson.getNextPresentable(context);
             else
                 pd = Lesson.PresentableDescriptor.ERROR;
         }
 
         if (pd.mStatus == Lesson.Status.OK) {
-            View view = InteractionManager.i().populate(lesson, pd, listener);
+            View view = InteractionManager.i().populate(context, lesson, pd, listener);
 
             assert view != null;
             final ViewGroup parent = (ViewGroup)view.getParent();
@@ -152,8 +148,8 @@ public class InteractionManager {
         return null;
     }
 
-    public View getLastInteractionView(InteractionListener listener) {
-        return InteractionManager.i().populate(mLastViewData.mLesson, mLastViewData.mPresentableDescription, listener);
+    public View getLastInteractionView(Context context, InteractionListener listener) {
+        return InteractionManager.i().populate(context, mLastViewData.mLesson, mLastViewData.mPresentableDescription, listener);
     }
 
     private void onInteraction(InteractionListener listener, InteractionEvent event) {
@@ -161,7 +157,7 @@ public class InteractionManager {
             listener.onInteraction(event);
     }
 
-    public View populate(Lesson lesson, Lesson.PresentableDescriptor pd, InteractionListener listener) {
+    public View populate(Context context, Lesson lesson, Lesson.PresentableDescriptor pd, InteractionListener listener) {
         View view = null;
 
         if (lesson == null || pd.mStatus != Lesson.Status.OK)
@@ -170,13 +166,13 @@ public class InteractionManager {
 
         String lessonType = lesson.getClass().toString();
         if (lessonType.equals(WelcomeLesson.class.toString()))
-            view = populateWelcome(lesson, (String) pd.mPresentable, listener);
+            view = populateWelcome(context, lesson, (String) pd.mPresentable, listener);
         if (lessonType.equals(SetLesson.class.toString())) //noinspection ConstantConditions
-            view = populateSetLesson(lesson, (Lesson.Problem) pd.mPresentable, listener);
+            view = populateSetLesson(context, lesson, (Lesson.Problem) pd.mPresentable, listener);
         if (lessonType.equals(PhraseLesson.class.toString()) || lessonType.equals(CharacterLesson.class.toString())) //noinspection ConstantConditions
-            view = populatePhraseLesson(lesson, (Lesson.Problem) pd.mPresentable, listener);
+            view = populatePhraseLesson(context, lesson, (Lesson.Problem) pd.mPresentable, listener);
         if (lessonType.equals(VocabularyLesson.class.toString())) //noinspection ConstantConditions
-            view = populateVocabularyLesson(lesson, (Lesson.Problem) pd.mPresentable, listener);
+            view = populateVocabularyLesson(context, lesson, (Lesson.Problem) pd.mPresentable, listener);
 
         assert view != null;
         view.setLayoutParams(defaultLayoutParams);
@@ -186,7 +182,7 @@ public class InteractionManager {
         return view;
     }
 
-    private View populateWelcome(final Lesson lesson, String text, final InteractionListener listener) {
+    private View populateWelcome(Context context, final Lesson lesson, String text, final InteractionListener listener) {
         final View view = mInteractionViewWelcome;
 
         TextView textView = view.findViewById(android.R.id.text1);
@@ -194,20 +190,20 @@ public class InteractionManager {
 
         view.findViewById(android.R.id.button1).setOnClickListener(v -> {
             lesson.mProgress.trainDate = lesson.mProgress.interactionDate = System.currentTimeMillis();
-            ProgressManager.i().save(lesson);
+            ProgressManager.i().save(context, lesson);
 
             onInteraction(listener, InteractionEvent.POSITIVE);
         });
 
 
-        setupQuickButtons(view, lesson, listener);
+        setupQuickButtons(context, view, lesson, listener);
 
         return view;
     }
 
-    private View populateSetLesson(final Lesson lesson, final Lesson.Problem problem, final InteractionListener listener) {
+    private View populateSetLesson(Context context, final Lesson lesson, final Lesson.Problem problem, final InteractionListener listener) {
         final View view = mInteractionViewSetCourse;
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         populateCard(view, problem);
 
@@ -221,12 +217,12 @@ public class InteractionManager {
             if (solved) {
                 lesson.mProgress.trainDate = System.currentTimeMillis();
                 problem.treatResult();
-                ProgressManager.i().save(lesson);
+                ProgressManager.i().save(context, lesson);
 
                 onInteraction(listener, InteractionEvent.POSITIVE);
             }
             else {
-                vibrateAsFail();
+                vibrateAsFail(context);
                 U.animateNegative(view.findViewById(R.id.card));
                 onInteraction(listener, InteractionEvent.NEGATIVE);
             }
@@ -253,7 +249,7 @@ public class InteractionManager {
         if (problemKnowledge == SetLesson.Knowledge.Untouched)
             swipeStack.setAdapter(new SetLessonWelcomeStackAdapter(viewMeaning));
         else
-            swipeStack.setAdapter(new SetLessonFullStackAdapter(viewVariants, viewMeaning));
+            swipeStack.setAdapter(new SetLessonFullStackAdapter(context, viewVariants, viewMeaning));
         swipeStack.setListener(new link.fls.swipestack.SwipeStack.SwipeStackListener() {
             @Override
             public void onViewSwipedToLeft(int position) {
@@ -261,7 +257,7 @@ public class InteractionManager {
                     lesson.mProgress.interactionDate = lesson.mProgress.trainDate = System.currentTimeMillis();
                     problem.attempt(true);
                     problem.treatResult();
-                    ProgressManager.i().save(lesson);
+                    ProgressManager.i().save(context, lesson);
                     return;
                 }
                 switch (position) {
@@ -269,7 +265,7 @@ public class InteractionManager {
                         lesson.mProgress.interactionDate = System.currentTimeMillis();
                         problem.attempt(false);
                         problem.treatResult();
-                        ProgressManager.i().save(lesson);
+                        ProgressManager.i().save(context, lesson);
 
                         View v = swipeStack.getAdapter().getView(1, null, null);
                         SwipeHelper sh = new SwipeHelper(swipeStack);
@@ -286,21 +282,21 @@ public class InteractionManager {
             @Override
             public void onStackEmpty() {
                 problem.treatResult();
-                ProgressManager.i().save(lesson);
+                ProgressManager.i().save(context, lesson);
 
                 onInteraction(listener, InteractionEvent.POSITIVE);
             }
         });
         swipeStack.resetStack();
 
-        setupQuickButtons(view, lesson, listener);
+        setupQuickButtons(context, view, lesson, listener);
 
         return view;
     }
 
-    private View populateVocabularyLesson(final Lesson lesson, final Lesson.Problem problem, final InteractionListener listener) {
+    private View populateVocabularyLesson(Context context, final Lesson lesson, final Lesson.Problem problem, final InteractionListener listener) {
         final View view = mInteractionViewSetCourse;
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         populateCard(view, problem);
 
@@ -312,11 +308,11 @@ public class InteractionManager {
 
         swipeStack.setAdapter(new SetLessonWelcomeStackAdapter(viewMeaning));
         swipeStack.setListener(new link.fls.swipestack.SwipeStack.SwipeStackListener() {
-            public void onViewSwiped() {
+            void onViewSwiped() {
                 lesson.mProgress.interactionDate = lesson.mProgress.trainDate = System.currentTimeMillis();
                 problem.attempt(true);
                 problem.treatResult();
-                ProgressManager.i().save(lesson);
+                ProgressManager.i().save(context, lesson);
             }
 
             @Override
@@ -332,24 +328,24 @@ public class InteractionManager {
             @Override
             public void onStackEmpty() {
                 problem.treatResult();
-                ProgressManager.i().save(lesson);
+                ProgressManager.i().save(context, lesson);
 
                 onInteraction(listener, InteractionEvent.POSITIVE);
             }
         });
         swipeStack.resetStack();
 
-        setupQuickButtons(view, lesson, listener);
+        setupQuickButtons(context, view, lesson, listener);
 
         return view;
     }
 
-    private View populatePhraseLesson(final Lesson lesson, final Lesson.Problem problem, final InteractionListener listener) {
+    private View populatePhraseLesson(Context context, final Lesson lesson, final Lesson.Problem problem, final InteractionListener listener) {
         final View view = mInteractionViewPhraseCourse;
 
         populateCard(view, problem);
 
-        final LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         final t.FlowLayout fllPhrase = view.findViewById(R.id.phrase);
         final t.FlowLayout fllVariants = view.findViewById(R.id.variants);
@@ -389,17 +385,17 @@ public class InteractionManager {
 
             if (solved) {
                 problem.treatResult();
-                ProgressManager.i().save(lesson);
+                ProgressManager.i().save(context, lesson);
 
                 onInteraction(listener, InteractionEvent.POSITIVE);
             }
             else {
-                vibrateAsFail();
+                vibrateAsFail(context);
                 U.animateNegative(view.findViewById(R.id.card));
             }
         });
 
-        setupQuickButtons(view, lesson, listener);
+        setupQuickButtons(context, view, lesson, listener);
 
         return view;
     }
@@ -464,7 +460,7 @@ public class InteractionManager {
         view.startAnimation(anim);
     }
 
-    private void setupQuickButtons(View view, final Lesson lesson, final InteractionListener listener) {
+    private void setupQuickButtons(Context context, View view, final Lesson lesson, final InteractionListener listener) {
         view.findViewById(android.R.id.closeButton).setOnClickListener(v -> onInteraction(listener, InteractionEvent.CLOSE));
         View.OnClickListener disableForListener = v -> {
             InteractionEvent event = InteractionEvent.CLOSE;
@@ -479,7 +475,7 @@ public class InteractionManager {
 
             if (lesson.mProgress.interactionDate == 0) {
                 lesson.mProgress.interactionDate = System.currentTimeMillis();
-                ProgressManager.i().save(lesson);
+                ProgressManager.i().save(context, lesson);
             }
         };
         view.findViewById(R.id.disableFor1h).setOnClickListener(disableForListener);
@@ -487,14 +483,15 @@ public class InteractionManager {
         view.findViewById(R.id.disableFor4h).setOnClickListener(disableForListener);
     }
 
-    private void vibrateAsFail() {
+    private void vibrateAsFail(Context context) {
         long[] pattern = {0, 200, 100, 200};
-        Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(pattern, -1);
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null)
+            vibrator.vibrate(pattern, -1);
     }
 
-    public void onConfigurationChanged(Configuration newConfig) {
-        createInteractionViews();
+    public void onConfigurationChanged(Context context, Configuration newConfig) {
+        createInteractionViews(context);
     }
 
 
@@ -505,10 +502,10 @@ public class InteractionManager {
         private final View mViewVariants;
         private final View mViewExplanation;
 
-        SetLessonFullStackAdapter(View viewVariants, View viewExplanation) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        SetLessonFullStackAdapter(Context context, View viewVariants, View viewExplanation) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            this.shadowingEnabled = new TinyDB(App.getContext()).getBoolean(C.SP_ENABLED_SHADOWING, true);
+            this.shadowingEnabled = new TinyDB(context).getBoolean(C.SP_ENABLED_SHADOWING, true);
 
             this.mViewDoYouKnow = inflater.inflate(R.layout.view_card_know_dont_know,
                     (ViewGroup) viewVariants.getParent(), false);

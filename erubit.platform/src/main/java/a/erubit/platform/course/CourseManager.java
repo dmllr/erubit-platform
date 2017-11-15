@@ -1,5 +1,6 @@
 package a.erubit.platform.course;
 
+import android.content.Context;
 import android.content.res.Resources;
 
 import org.json.JSONArray;
@@ -10,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import a.erubit.platform.android.App;
 import a.erubit.platform.R;
 import t.TinyDB;
 import u.C;
@@ -28,18 +28,18 @@ public class CourseManager {
     private CourseManager() {
     }
 
-    public void initialize() {
-        String packageName = App.getContext().getPackageName();
-        int resourceId = App.getContext().getResources().getIdentifier("_contents", "raw", packageName);
+    public void initialize(Context context) {
+        String packageName = context.getPackageName();
+        int resourceId = context.getResources().getIdentifier("_contents", "raw", packageName);
         if (resourceId != 0) {
             try {
-                String json = U.loadStringResource(resourceId);
+                String json = U.loadStringResource(context, resourceId);
                 JSONArray ja = new JSONArray(json);
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject jo = ja.getJSONObject(i);
-                    resourceId = App.getContext().getResources().getIdentifier(jo.getString("name"), "raw", packageName);
+                    resourceId = context.getResources().getIdentifier(jo.getString("name"), "raw", packageName);
 
-                    Course c1 = fromResourceId(resourceId);
+                    Course c1 = fromResourceId(context, resourceId);
                     c1.defaultActive = jo.getBoolean("active");
                     mCourses.add(c1);
                 }
@@ -48,17 +48,17 @@ public class CourseManager {
             }
         }
 
-        if (!CourseManager.i().hasSavedSettings()) {
+        if (!CourseManager.i().hasSavedSettings(context)) {
             for (Course course: mCourses)
                 if (course.defaultActive)
-                    CourseManager.i().setActive(course);
+                    CourseManager.i().setActive(context, course);
         }
-        updateActivity();
+        updateActivity(context);
     }
 
-    private LanguageCourse fromResourceId(int resourceId) {
+    private LanguageCourse fromResourceId(Context context, int resourceId) {
         LanguageCourse c = new LanguageCourse();
-        c.loadFromResource(resourceId);
+        c.loadFromResource(context, resourceId);
         return c;
     }
     public ArrayList<Course> getCourses() {
@@ -76,35 +76,35 @@ public class CourseManager {
         return mActiveCourses.contains(course);
     }
 
-    public void setActive(Course course) {
+    public void setActive(Context context, Course course) {
         if (!mActiveCourses.contains(course))
             mActiveCourses.add(course);
 
-        save();
+        save(context);
     }
 
-    public void setInactive(Course course) {
+    public void setInactive(Context context, Course course) {
         if (mActiveCourses.contains(course))
             mActiveCourses.remove(course);
 
-        save();
+        save(context);
     }
 
-    private void save() {
+    private void save(Context context) {
         int size = mActiveCourses.size();
         ArrayList<String> list = new ArrayList<>(size);
         for (int k = 0; k < size; k++)
             list.add(mActiveCourses.get(k).id);
 
-        new TinyDB(App.getContext()).putListString(C.SP_ACTIVE_COURSES, list);
+        new TinyDB(context.getApplicationContext()).putListString(C.SP_ACTIVE_COURSES, list);
     }
 
-    private boolean hasSavedSettings() {
-        return new TinyDB(App.getContext()).getListString(C.SP_ACTIVE_COURSES).size() > 0;
+    private boolean hasSavedSettings(Context context) {
+        return new TinyDB(context.getApplicationContext()).getListString(C.SP_ACTIVE_COURSES).size() > 0;
     }
 
-    private void updateActivity() {
-        ArrayList<String> list = new TinyDB(App.getContext()).getListString(C.SP_ACTIVE_COURSES);
+    private void updateActivity(Context context) {
+        ArrayList<String> list = new TinyDB(context.getApplicationContext()).getListString(C.SP_ACTIVE_COURSES);
 
         //noinspection unchecked
         mActiveCourses = (ArrayList<Course>) mCourses.clone();
@@ -115,7 +115,7 @@ public class CourseManager {
             }
     }
 
-    public Lesson getNextLesson() {
+    public Lesson getNextLesson(Context context) {
         int size = mActiveCourses.size();
         if (size < 1)
             return null;
@@ -123,11 +123,11 @@ public class CourseManager {
         int i = new Random().nextInt(mActiveCourses.size());
         Course course = mActiveCourses.get(i);
 
-        return getNextLesson(course);
+        return getNextLesson(context, course);
     }
 
-    public Lesson getNextLesson(Course course) {
-        ArrayList<Lesson> lessons = course.getLessons();
+    public Lesson getNextLesson(Context context, Course course) {
+        ArrayList<Lesson> lessons = course.getLessons(context);
 
         int size = lessons.size();
         if (size < 1)
@@ -142,24 +142,25 @@ public class CourseManager {
         return null;
     }
 
-    public String getSharingText() {
-        Resources Rs = App.getContext().getResources();
-        String r = "I'm learning now ";
+    public String getSharingText(Context context) {
+        Resources resources = context.getResources();
+        StringBuilder r = new StringBuilder("I'm learning now ");
         int size = mActiveCourses.size();
         if (size == 0)
-            r += Rs.getString(R.string.app_name) + " courses";
+            r.append(resources.getString(R.string.app_name)).append(" courses");
         else {
             for (int i = 0; i < size - 1; i++) {
-                r += mActiveCourses.get(i).name;
+                r.append(mActiveCourses.get(i).name);
                 if (i < size - 2)
-                    r += ", ";
+                    r.append(", ");
             }
             if (size > 1)
-                r += " and ";
-            r += mActiveCourses.get(size - 1).name;
-            r += " of " + Rs.getString(R.string.app_name) + " courses";
+                r.append(" and ");
+            r.append(mActiveCourses.get(size - 1).name);
+            r.append(" of ").append(resources.getString(R.string.app_name)).append(" courses");
         }
-        r += ".\nJoin me, download Android app at" + " " + Rs.getString(R.string.play_url, App.getContext().getPackageName());
-        return r;
+        r.append(".\nJoin me, download Android app at" + " ").append(resources.getString(R.string.play_url, context.getPackageName()));
+
+        return r.toString();
     }
 }

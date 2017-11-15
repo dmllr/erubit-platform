@@ -16,7 +16,6 @@ import a.erubit.platform.R;
 import t.TinyDB;
 import u.C;
 
-import static a.erubit.platform.android.App.getContext;
 
 public class InteractionService extends Service implements InteractionManager.InteractionListener {
 
@@ -31,12 +30,12 @@ public class InteractionService extends Service implements InteractionManager.In
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        boolean enabled = new TinyDB(getContext()).getBoolean(C.SP_ENABLED_ON_UNLOCK, true)
+        boolean enabled = new TinyDB(getApplicationContext()).getBoolean(C.SP_ENABLED_ON_UNLOCK, true)
                 && System.currentTimeMillis() > mNextTimeSlot
-                && (Build.VERSION.SDK_INT < 23 || Settings.canDrawOverlays(App.getContext()));
+                && (Build.VERSION.SDK_INT < 23 || Settings.canDrawOverlays(getApplicationContext()));
 
         if(enabled && (mInteractionView == null || mInteractionView.getWindowToken() == null)) {
-            mInteractionView = InteractionManager.i().getInteractionView(this);
+            mInteractionView = InteractionManager.i().getInteractionView(getApplicationContext(), this);
 
             if (mInteractionView != null) {
                 mInteractionView.findViewById(R.id.quickButtonBar).setVisibility(View.VISIBLE);
@@ -53,7 +52,7 @@ public class InteractionService extends Service implements InteractionManager.In
 
         // only if interaction window is shown now
         if (mInteractionView != null && mInteractionView.getWindowToken() != null) {
-            InteractionManager.i().onConfigurationChanged(newConfig);
+            InteractionManager.i().onConfigurationChanged(getApplicationContext(), newConfig);
             updateView();
         }
     }
@@ -61,7 +60,7 @@ public class InteractionService extends Service implements InteractionManager.In
     private void updateView() {
         removeView();
 
-        mInteractionView = InteractionManager.i().getLastInteractionView(this);
+        mInteractionView = InteractionManager.i().getLastInteractionView(getApplicationContext(), this);
 
         if (mInteractionView != null) {
             mInteractionView.findViewById(R.id.quickButtonBar).setVisibility(View.VISIBLE);

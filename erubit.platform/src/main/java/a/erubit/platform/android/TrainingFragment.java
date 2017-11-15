@@ -38,12 +38,12 @@ public abstract class TrainingFragment extends Fragment implements InteractionMa
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        InteractionManager.i().onConfigurationChanged(newConfig);
-        updateView();
+        InteractionManager.i().onConfigurationChanged(getContext(), newConfig);
+        updateView(getContext());
     }
 
-    private void updateView() {
-        View v = InteractionManager.i().getLastInteractionView(this);
+    private void updateView(Context context) {
+        View v = InteractionManager.i().getLastInteractionView(context, this);
         v.findViewById(R.id.quickButtonBar).setVisibility(View.GONE);
 
         mViewAnimator.removeAllViews();

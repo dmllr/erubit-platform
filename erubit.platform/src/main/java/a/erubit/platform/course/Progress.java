@@ -1,5 +1,6 @@
 package a.erubit.platform.course;
 
+import android.content.Context;
 import android.content.res.Resources;
 
 import a.erubit.platform.android.App;
@@ -14,8 +15,8 @@ public abstract class Progress {
 
     public int progress = 0;
 
-    public String getExplanation() {
-        Resources r = App.getContext().getResources();
+    public String getExplanation(Context context) {
+        Resources r = context.getResources();
         if (interactionDate == 0)
             return r.getString(R.string.unopened);
 

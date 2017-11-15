@@ -1,5 +1,6 @@
 package a.erubit.platform.course;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
@@ -19,7 +20,6 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import a.erubit.platform.R;
-import a.erubit.platform.android.App;
 import u.C;
 import u.U;
 
@@ -39,8 +39,8 @@ public abstract class BunchLesson extends Lesson {
     protected abstract int getRankLearnedWell();
 
     @Override
-    public PresentableDescriptor getNextPresentable() {
-        loadHeavyContent();
+    public PresentableDescriptor getNextPresentable(Context context) {
+        loadHeavyContent(context);
 
         int size = mSet.size();
 
@@ -85,8 +85,8 @@ public abstract class BunchLesson extends Lesson {
     protected abstract PresentableDescriptor getPresentable(Item problemItem);
 
     @Override
-    public ArrayList<PresentableDescriptor> getPresentables() {
-        loadHeavyContent();
+    public ArrayList<PresentableDescriptor> getPresentables(Context context) {
+        loadHeavyContent(context);
 
         int size = mSet.size();
         ArrayList<PresentableDescriptor> descriptors = new ArrayList<>(size);
@@ -99,8 +99,8 @@ public abstract class BunchLesson extends Lesson {
         return descriptors;
     }
 
-    public void loadHeavyContent() {
-        loadFromResource(contentResourceId, true);
+    public void loadHeavyContent(Context context) {
+        loadFromResource(context, contentResourceId, true);
     }
 
     @Override
@@ -165,13 +165,13 @@ public abstract class BunchLesson extends Lesson {
     }
 
     @Override
-    public a.erubit.platform.course.Progress getProgress() {
-        mProgress = loadProgress(true);
+    public a.erubit.platform.course.Progress getProgress(Context context) {
+        mProgress = loadProgress(context, true);
         return mProgress;
     }
 
-    private Progress loadProgress(boolean withHeavyContent) {
-        String json = ProgressManager.i().load(this.id);
+    private Progress loadProgress(Context context, boolean withHeavyContent) {
+        String json = ProgressManager.i().load(context, this.id);
 
         Progress progress = new Progress();
 
@@ -211,16 +211,16 @@ public abstract class BunchLesson extends Lesson {
         return mProgress.nextInteractionDate >= 0 && mProgress.nextInteractionDate <= System.currentTimeMillis();
     }
 
-    BunchLesson loadFromResource(int resourceId, boolean withHeavyContent) {
+    BunchLesson loadFromResource(Context context, int resourceId, boolean withHeavyContent) {
         this.contentResourceId = resourceId;
         try {
-            String json = U.loadStringResource(resourceId);
+            String json = U.loadStringResource(context, resourceId);
             JSONObject jo = new JSONObject(json);
 
             id = jo.getString("id");
-            name = U.getStringValue(jo, "title");
+            name = U.getStringValue(context, jo, "title");
 
-            Progress progress = loadProgress(withHeavyContent);
+            Progress progress = loadProgress(context, withHeavyContent);
 
             if (withHeavyContent) {
                 mSet = new ArrayList<>();
@@ -383,7 +383,7 @@ public abstract class BunchLesson extends Lesson {
         }
 
         @Override
-        public String getExplanation() {
+        public String getExplanation(Context context) {
             int t = 0, f = 0, l = 0, lw = 0;
             int size = map.size();
             for (int k = 0; k < size; k++) {
@@ -399,7 +399,7 @@ public abstract class BunchLesson extends Lesson {
             }
             t = Math.max(0, t - l - lw);
 
-            Resources r = App.getContext().getResources();
+            Resources r = context.getResources();
             if (t + f + l + lw == 0)
                 return r.getString(R.string.unopened);
             if (lw == size)

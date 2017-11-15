@@ -1,5 +1,7 @@
 package a.erubit.platform.course;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,23 +18,23 @@ public class LanguageCourse extends Course {
         };
     }
 
-    public void loadFromResource(int resourceId) {
+    public void loadFromResource(Context context, int resourceId) {
         try {
-            String json = U.loadStringResource(resourceId);
-            loadFromString(json);
+            String json = U.loadStringResource(context, resourceId);
+            loadFromString(context, json);
         } catch (IOException ignored) {
             ignored.printStackTrace();
             // TODO
         }
     }
 
-    private void loadFromString(String json) {
+    private void loadFromString(Context context, String json) {
         try {
             JSONObject jo = new JSONObject(json);
 
             id = jo.getString("id");
-            name = U.getStringValue(jo, "title");
-            description = U.getStringValue(jo, "description");
+            name = U.getStringValue(context, jo, "title");
+            description = U.getStringValue(context, jo, "description");
 
             if (jo.has("lessons")) {
                 JSONArray jd = jo.getJSONArray("lessons");

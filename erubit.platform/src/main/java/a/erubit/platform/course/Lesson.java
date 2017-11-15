@@ -1,5 +1,7 @@
 package a.erubit.platform.course;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 public abstract class Lesson {
@@ -22,13 +24,13 @@ public abstract class Lesson {
 
     public abstract boolean hasInteraction();
 
-    public abstract PresentableDescriptor getNextPresentable();
+    public abstract PresentableDescriptor getNextPresentable(Context context);
 
-    public abstract ArrayList<PresentableDescriptor> getPresentables();
+    public abstract ArrayList<PresentableDescriptor> getPresentables(Context context);
 
     public abstract Progress updateProgress();
 
-    public abstract Progress getProgress();
+    public abstract Progress getProgress(Context context);
 
 
     public static class PresentableDescriptor {

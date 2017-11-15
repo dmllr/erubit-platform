@@ -29,13 +29,13 @@ public class LessonTrainingFragment extends TrainingFragment {
     @Override
     protected View getNextInteractionView() {
         mPresentableIndex++;
-        ArrayList<Lesson.PresentableDescriptor> presentables = mLesson.getPresentables();
+        ArrayList<Lesson.PresentableDescriptor> presentables = mLesson.getPresentables(getContext());
 
         if (mPresentableIndex == presentables.size())
             return null;
 
         Lesson.PresentableDescriptor pd = presentables.get(mPresentableIndex);
-        View v = InteractionManager.i().populate(mLesson, pd, this);
+        View v = InteractionManager.i().populate(getContext(), mLesson, pd, this);
         v.findViewById(R.id.quickButtonBar).setVisibility(View.GONE);
 
         return v;

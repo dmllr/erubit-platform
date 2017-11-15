@@ -28,14 +28,14 @@ public class CourseTrainingFragment extends TrainingFragment {
     public View getNextInteractionView() {
         Lesson lesson;
         if (mCourse != null)
-            lesson = CourseManager.i().getNextLesson(mCourse);
+            lesson = CourseManager.i().getNextLesson(getContext(), mCourse);
         else
-            lesson = CourseManager.i().getNextLesson();
+            lesson = CourseManager.i().getNextLesson(getContext());
 
         if (lesson == null)
             return null;
 
-        View v = InteractionManager.i().getInteractionView(lesson, this);
+        View v = InteractionManager.i().getInteractionView(getContext(), lesson, this);
         v.findViewById(R.id.quickButtonBar).setVisibility(View.GONE);
 
         return v;

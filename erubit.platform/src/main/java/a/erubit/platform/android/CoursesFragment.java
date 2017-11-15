@@ -90,7 +90,7 @@ public class CoursesFragment extends Fragment {
         void onCourseInteraction(Course course, CourseInteractionAction action);
     }
 
-    static class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.ViewHolder> {
+    class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.ViewHolder> {
         private final ArrayList<Course> mList;
         private final OnCourseInteractionListener mListener;
 
@@ -110,10 +110,10 @@ public class CoursesFragment extends Fragment {
                 CheckMorphButton b = ((CheckMorphButton) v);
                 if (b.state == CheckMorphButton.State.AVAILABLE) {
                     b.morphToActivated(CheckMorphButton.DURATION);
-                    CourseManager.i().setActive(holder.mCourse);
+                    CourseManager.i().setActive(CoursesFragment.this.getContext(), holder.mCourse);
                 } else {
                     b.morphToAvailable(CheckMorphButton.DURATION);
-                    CourseManager.i().setInactive(holder.mCourse);
+                    CourseManager.i().setInactive(CoursesFragment.this.getContext(), holder.mCourse);
                 }
             });
 
@@ -162,7 +162,7 @@ public class CoursesFragment extends Fragment {
             return mList.size();
         }
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             Course mCourse;
             private final CheckMorphButton checkButton;
             private final TextView textTitle;

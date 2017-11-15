@@ -96,14 +96,14 @@ public class LessonsFragment extends Fragment {
         Lesson lesson = ((LessonsListAdapter)mListView.getAdapter()).get(cvi);
 
         mTextHeader.setText(lesson.name);
-        mTextExplanation.setText(lesson.getProgress().getExplanation());
+        mTextExplanation.setText(lesson.getProgress(getContext()).getExplanation(getContext()));
     }
 
     class LessonsListAdapter extends RecyclerView.Adapter<LessonsListAdapter.ViewHolder> {
         private final ArrayList<Lesson> mList;
 
         LessonsListAdapter(Course course) {
-            mList = course.getLessons();
+            mList = course.getLessons(getContext());
         }
 
         @Override

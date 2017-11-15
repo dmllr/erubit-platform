@@ -67,14 +67,14 @@ public class ProgressFragment extends Fragment {
         ProgressListAdapter(final Course course) {
             mList = new ArrayList<>(10);
 
-            for (Lesson lesson: course.getLessons()) {
+            for (Lesson lesson: course.getLessons(getContext())) {
                 mList.add(new HeaderItem(lesson));
                 if (lesson instanceof WelcomeLesson) {
-                    mList.add(new ContentItem(lesson.getProgress().getExplanation(), ""));
+                    mList.add(new ContentItem(lesson.getProgress(getContext()).getExplanation(getContext()), ""));
                 }
                 if (lesson instanceof BunchLesson) {
                     // including SetLesson, VocabularyLesson, PhraseLesson and CharacterLesson
-                    ((BunchLesson)lesson).loadHeavyContent();
+                    ((BunchLesson)lesson).loadHeavyContent(getContext());
                     for (BunchLesson.Item item: ((BunchLesson)lesson).mSet) {
                         mList.add(new ContentItem(item.character, getKnowledgeText(item.knowledgeLevel)));
                     }
@@ -84,15 +84,15 @@ public class ProgressFragment extends Fragment {
 
         private String getKnowledgeText(int knowledgeLevel) {
             if (knowledgeLevel > 0 && knowledgeLevel < SetLesson.RANK_FAMILIAR)
-                return App.getContext().getString(R.string.studying);
+                return getString(R.string.studying);
             else if (knowledgeLevel >= SetLesson.RANK_FAMILIAR && knowledgeLevel < SetLesson.RANK_LEARNED)
-                return App.getContext().getString(R.string.familiar);
+                return getString(R.string.familiar);
             else if (knowledgeLevel >= SetLesson.RANK_LEARNED && knowledgeLevel < SetLesson.RANK_LEARNED_WELL)
-                return App.getContext().getString(R.string.learned);
+                return getString(R.string.learned);
             else if (knowledgeLevel >= SetLesson.RANK_LEARNED_WELL)
-                return App.getContext().getString(R.string.learned_well);
+                return getString(R.string.learned_well);
             else
-                return App.getContext().getString(R.string.unknown);
+                return getString(R.string.unknown);
         }
 
         @Override

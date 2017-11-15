@@ -99,8 +99,8 @@ public class NavActivity
         });
 
         final SwitchCompat switchUnlock = ((SwitchCompat) findViewById(R.id.switchEnableOnUnlock));
-        switchUnlock.setChecked(new TinyDB(App.getContext()).getBoolean(C.SP_ENABLED_ON_UNLOCK, true));
-        switchUnlock.setOnCheckedChangeListener((buttonView, isChecked) -> new TinyDB(App.getContext()).putBoolean(C.SP_ENABLED_ON_UNLOCK, isChecked));
+        switchUnlock.setChecked(new TinyDB(getApplicationContext()).getBoolean(C.SP_ENABLED_ON_UNLOCK, true));
+        switchUnlock.setOnCheckedChangeListener((buttonView, isChecked) -> new TinyDB(getApplicationContext()).putBoolean(C.SP_ENABLED_ON_UNLOCK, isChecked));
 
         mFab.setOnClickListener(view -> trainingButtonTapped());
     }
@@ -182,7 +182,7 @@ public class NavActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_share) {
-            String message = CourseManager.i().getSharingText();
+            String message = CourseManager.i().getSharingText(this);
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("text/plain");
             share.putExtra(Intent.EXTRA_TEXT, message);
@@ -254,7 +254,7 @@ public class NavActivity
                 showCourseInfo(course);
                 break;
             case PRACTICE:
-                Lesson lesson = CourseManager.i().getNextLesson(course);
+                Lesson lesson = CourseManager.i().getNextLesson(this, course);
                 if (lesson == null)
                     fragment = new LessonsFragment();
                 else
@@ -344,7 +344,7 @@ public class NavActivity
     private void updatePreferences() {
         final SwitchCompat switchUnlock = ((SwitchCompat) findViewById(R.id.switchEnableOnUnlock));
         if (switchUnlock != null)
-            switchUnlock.setChecked(new TinyDB(App.getContext()).getBoolean(C.SP_ENABLED_ON_UNLOCK, true));
+            switchUnlock.setChecked(new TinyDB(getApplicationContext()).getBoolean(C.SP_ENABLED_ON_UNLOCK, true));
     }
 
     @Override

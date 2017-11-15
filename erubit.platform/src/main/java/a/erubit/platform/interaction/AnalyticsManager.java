@@ -1,5 +1,6 @@
 package a.erubit.platform.interaction;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -12,12 +13,8 @@ public class AnalyticsManager {
         return mInstance;
     }
 
-    private AnalyticsManager() {
-        initialize();
-    }
-
-    public void initialize() {
-        mReporterInstance.initialize();
+    public void initialize(Context context) {
+        mReporterInstance.initialize(context);
     }
 
     public void reportFragmentChanged(Fragment fragment) {
@@ -55,7 +52,7 @@ public class AnalyticsManager {
 
     private static class EmptyAnalyticsReporter implements IAnalyticsReporter {
         @Override
-        public void initialize() { }
+        public void initialize(Context context) { }
         @Override
         public void report(String event, String category) { }
     }
