@@ -3,10 +3,13 @@ package a.erubit.platform.android;
 import android.app.Service;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 
+import a.erubit.platform.BuildConfig;
 import a.erubit.platform.interaction.AnalyticsManager;
 import a.erubit.platform.interaction.InteractionManager;
 import a.erubit.platform.R;
@@ -29,7 +32,8 @@ public class InteractionService extends Service implements InteractionManager.In
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean enabled = new TinyDB(getContext()).getBoolean(C.SP_ENABLED_ON_UNLOCK, true)
-                && System.currentTimeMillis() > mNextTimeSlot;
+                && System.currentTimeMillis() > mNextTimeSlot
+                && (Build.VERSION.SDK_INT < 23 || Settings.canDrawOverlays(App.getContext()));
 
         if(enabled && (mInteractionView == null || mInteractionView.getWindowToken() == null)) {
             mInteractionView = InteractionManager.i().getInteractionView(this);

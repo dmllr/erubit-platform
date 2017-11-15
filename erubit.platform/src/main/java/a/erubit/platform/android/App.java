@@ -21,6 +21,7 @@ public class App extends Application {
         super.onCreate();
 
         mContext = this;
+
         CourseManager.i().initialize();
         InteractionManager.i().initialize();
         AnalyticsManager.i().initialize();
