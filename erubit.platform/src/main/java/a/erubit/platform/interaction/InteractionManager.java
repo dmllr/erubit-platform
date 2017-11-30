@@ -286,6 +286,12 @@ public class InteractionManager {
 
                 onInteraction(listener, InteractionEvent.POSITIVE);
             }
+
+            @Override
+            public void onClick() { }
+
+            @Override
+            public void onLongClick(long duration) { }
         });
         swipeStack.resetStack();
 
@@ -332,6 +338,12 @@ public class InteractionManager {
 
                 onInteraction(listener, InteractionEvent.POSITIVE);
             }
+
+            @Override
+            public void onClick() { }
+
+            @Override
+            public void onLongClick(long duration) { }
         });
         swipeStack.resetStack();
 
