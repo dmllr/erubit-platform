@@ -1,7 +1,9 @@
 package a.erubit.platform.android;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.IBinder;
@@ -18,6 +20,8 @@ import u.C;
 
 
 public class InteractionService extends Service implements InteractionManager.InteractionListener {
+
+    private static final int INTERACTION_SERVICE_FG_ID = 9990;
 
     private WindowManager mWindowManager;
     private View mInteractionView;
@@ -40,6 +44,8 @@ public class InteractionService extends Service implements InteractionManager.In
             if (mInteractionView != null) {
                 mInteractionView.findViewById(R.id.quickButtonBar).setVisibility(View.VISIBLE);
                 mWindowManager.addView(mInteractionView, mInteractionView.getLayoutParams());
+
+                startForeground();
             }
         }
 
@@ -70,6 +76,12 @@ public class InteractionService extends Service implements InteractionManager.In
         }
     }
 
+    private void startForeground() {
+        Notification notification = new Notification.Builder(this)
+                .build();
+        startForeground(INTERACTION_SERVICE_FG_ID, notification);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -79,16 +91,17 @@ public class InteractionService extends Service implements InteractionManager.In
         mInteractionView = null;
     }
 
-    private void removeView() {
-        if (mInteractionView != null && mInteractionView.getWindowToken() != null) {
-            mWindowManager.removeView(mInteractionView);
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         removeView();
+    }
+
+    private void removeView() {
+        if (mInteractionView != null && mInteractionView.getWindowToken() != null) {
+            mWindowManager.removeView(mInteractionView);
+        }
+        stopForeground(true);
     }
 
     @Override

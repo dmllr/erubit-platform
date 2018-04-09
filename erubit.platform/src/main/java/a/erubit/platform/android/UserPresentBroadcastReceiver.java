@@ -3,6 +3,7 @@ package a.erubit.platform.android;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 public class UserPresentBroadcastReceiver extends BroadcastReceiver {
 
@@ -19,6 +20,9 @@ public class UserPresentBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void showFloatingView(Context context) {
-        context.startService(new Intent(context.getApplicationContext(), InteractionService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            context.startForegroundService(new Intent(context.getApplicationContext(), InteractionService.class));
+        else
+            context.startService(new Intent(context.getApplicationContext(), InteractionService.class));
     }
 }

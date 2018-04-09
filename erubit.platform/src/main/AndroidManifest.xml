@@ -14,12 +14,6 @@
             android:name=".android.NavActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
 
-        <receiver android:name=".android.UserPresentBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-            </intent-filter>
-        </receiver>
-
         <service
             android:name=".android.InteractionService"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
