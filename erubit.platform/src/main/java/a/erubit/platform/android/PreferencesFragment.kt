@@ -2,11 +2,11 @@ package a.erubit.platform.android
 
 import a.erubit.platform.R
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceFragmentCompat
 
 class PreferencesFragment : PreferenceFragmentCompat(), IUxController {
 	override fun onCreate(savedInstanceState: Bundle?) {

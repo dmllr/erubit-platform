@@ -19,18 +19,18 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.support.annotation.RequiresApi
-import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceManager
-import android.support.v7.widget.SwitchCompat
-import android.support.v7.widget.Toolbar
+import androidx.annotation.RequiresApi
+import com.google.android.material.navigation.NavigationView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
+import androidx.appcompat.widget.SwitchCompat
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.CompoundButton
@@ -158,12 +158,14 @@ class NavActivity :
 		}
 	}
 
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) { // check once again if we have permission
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) { // continue here - permission was granted
 				permissionGranted()
 			}
 		}
+
+		super.onActivityResult(requestCode, resultCode, data)
 	}
 
 	override fun onNavigationItemSelected(item: MenuItem): Boolean { // Handle navigation view item clicks here.
@@ -295,7 +297,8 @@ class NavActivity :
 
 		fm.popBackStack()
 
-		triggerUIUpdates(fm, fm.primaryNavigationFragment, -1)
+		if (null != fm.primaryNavigationFragment)
+			triggerUIUpdates(fm, fm.primaryNavigationFragment!!, -1)
 
 		AnalyticsManager.i().reportFragmentChanged(fm.primaryNavigationFragment)
 
