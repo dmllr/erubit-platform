@@ -2,7 +2,6 @@ package a.erubit.platform.course
 
 import a.erubit.platform.R
 import android.content.Context
-import android.util.SparseArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONException
@@ -138,9 +137,8 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 
 		var t = 0
 		var r = 0
-		size = progress.map.size()
-		for (k in 0 until size) {
-			val cs = progress.map[progress.map.keyAt(k)]
+		size = progress.map.size
+		for (cs in progress.map.values) {
 			if (cs.touchDate > 0)
 				t++
 			if (cs.knowledgeLevel == rankFamiliar)
@@ -182,11 +180,8 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 
 		if (withHeavyContent && jo.has("map")) {
 			jo = jo["map"].asJsonObject
-			val size = jo["mSize"].asInt
-			val keys = jo["mKeys"].asJsonArray
-			val values = jo["mValues"].asJsonArray
-			for (k in 0 until size)
-				progress.appendFromJson(keys[k].asInt, values[k].asJsonObject)
+			for (k in jo.keySet())
+				progress.appendFromJson(k.toInt(), jo[k].asJsonObject)
 		}
 
 		return progress
@@ -325,19 +320,19 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 	}
 
 	inner class Progress : a.erubit.platform.course.Progress {
-		val map: SparseArray<ItemProgress>
+		val map: HashMap<Int, ItemProgress>
 		private val defaultValue = ItemProgress()
 
 		internal constructor() {
-			map = SparseArray()
+			map = HashMap()
 		}
 
 		internal constructor(size: Int) {
-			map = SparseArray(size)
+			map = HashMap(size)
 		}
 
 		internal fun append(id: Int, cs: ItemProgress) {
-			map.append(id, cs)
+			map.put(id, cs)
 		}
 
 		fun appendFromJson(id: Int, jo: JsonObject) {
@@ -358,7 +353,7 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		}
 
 		internal operator fun get(id: Int): ItemProgress {
-			return map[id, defaultValue]
+			return map.get(id) ?: defaultValue
 		}
 
 		override fun getExplanation(context: Context): String {
@@ -366,9 +361,8 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 			var f = 0
 			var l = 0
 			var lw = 0
-			val size = map.size()
-			for (k in 0 until size) {
-				val cs = map[map.keyAt(k)]
+			val size = map.size
+			for (cs in map.values) {
 				if (cs.touchDate > 0)
 					t++
 				if (cs.knowledgeLevel == rankFamiliar)
