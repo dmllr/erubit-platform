@@ -15,6 +15,9 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
+import android.support.annotation.RequiresApi
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationCompat.PRIORITY_MIN
 import android.view.View
 import android.view.WindowManager
 import t.TinyDB
@@ -70,9 +73,38 @@ class InteractionService : Service(), InteractionListener {
 	}
 
 	private fun startForeground() {
-		val notification = Notification.Builder(this)
-				.build()
+		val channel =
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+				createNotificationChannel()
+			else ""
+
+		val notificationBuilder = NotificationCompat.Builder(this, channel)
+		val builder = notificationBuilder.setOngoing(true)
+				//.setSmallIcon(R.mipmap.ic_launcher)
+				.setPriority(PRIORITY_MIN)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			builder.setCategory(Notification.CATEGORY_SERVICE)
+
+		val notification = builder.build()
+
 		startForeground(interactionServiceFgId, notification)
+	}
+
+	@RequiresApi(Build.VERSION_CODES.O)
+	private fun createNotificationChannel(): String {
+		val id = "erubit-foreground-service"
+		val chan = NotificationChannel(
+			id,
+			"Screen-unlock learning service",
+			NotificationManager.IMPORTANCE_NONE)
+		chan.lightColor = R.color.color_purple
+		chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+
+		val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+		service.createNotificationChannel(chan)
+
+		return id
 	}
 
 	override fun onCreate() {
