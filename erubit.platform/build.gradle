@@ -43,7 +43,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.nex3z:flow-layout:0.1.2'
-    implementation 'oss.dmllr:swipestack:0.3.3'
+    implementation 'oss.dmllr:swipestack:0.3.4'
     testImplementation 'junit:junit:4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

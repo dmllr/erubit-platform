@@ -23,7 +23,7 @@ class PreferencesFragment : PreferenceFragmentCompat(), IUxController {
 		return view
 	}
 
-	override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {}
+	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {}
 
 	override val floatingButtonVisibility: Int
 		get() = View.GONE
