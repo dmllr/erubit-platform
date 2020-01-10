@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
 
-public class AutoResizeTextView extends android.support.v7.widget.AppCompatTextView {
+public class AutoResizeTextView extends androidx.appcompat.widget.AppCompatTextView {
     private interface SizeTester {
         /**
          *

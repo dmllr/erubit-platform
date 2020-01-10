@@ -4,14 +4,14 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.StateSet;
 import android.view.ViewGroup;
 
 
-public class MorphingButton extends android.support.v7.widget.AppCompatButton {
+public class MorphingButton extends androidx.appcompat.widget.AppCompatButton {
 
     private Padding mPadding;
     private int mHeight;
