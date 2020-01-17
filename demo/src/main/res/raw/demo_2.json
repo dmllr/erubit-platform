@@ -9,7 +9,7 @@
     { "i": 3, "c": "いい　いぬ　で{は:wa}　ありません", "m": "it's not a good dog" },
     { "i": 4, "c": "いい　いぬ　で{は:wa}　ありません でした", "m": "it was not a good dog" }
   ],
-  "variants": [
+  "noise": [
     "cat", "bird", "condition", "winter", "summer", "ninja", "water"
   ]
 }

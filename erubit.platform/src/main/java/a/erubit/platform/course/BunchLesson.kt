@@ -215,7 +215,7 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 				mSet = set
 
 				val variants = ArrayList<String>(20)
-				val jvar = jo.getJSONArray("variants")
+				val jvar = jo.getJSONArray("noise")
 				for (i in 0 until jvar.length()) {
 					variants.add(jvar.getString(i))
 				}

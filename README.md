@@ -131,14 +131,14 @@ References are used for [multilingual support][#multilingual].
     { "i": 3, "c": "え", "m": "e" },
     { "i": 4, "c": "お", "m": "o" }
   ],
-  "variants": [
+  "noise": [
     "a",   "i",   "u",   "e",  "o"
   ]
 }
 ```
 * `"type"` should be `"Set"`. Another types of lessons are sampled in `Demo` project.
 * `"set"` is a list of characters to learn
-* `"variants"` is a list of possible wrong answers
+* `"noise"` is a list of possible wrong answers
 
 ##### <a name="multilingual"></a>Multilingual support
 Text fields, like titles might be translatable for many languages.

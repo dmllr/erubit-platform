@@ -9,7 +9,7 @@
     { "i": 7, "c": "{九:きゅう}", "m": "nine" },
     { "i": 8, "c": "{二:に}", "m": "two" }
   ],
-  "variants": [
+  "noise": [
     "three", "for", "five", "six", "eight", "nine", "female", "male"
   ]
 }

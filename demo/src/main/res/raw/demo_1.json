@@ -8,5 +8,5 @@
     { "i": 2, "c": "komban-wa", "m": "good evening" },
     { "i": 3, "c": "oyasumi-nasai", "m": "goodnight" }
   ],
-  "variants": ["good morning", "hello", "good evening", "goodnight", "goodbye", "hi", "welcome"]
+  "noise": ["good morning", "hello", "good evening", "goodnight", "goodbye", "hi", "welcome"]
 }
