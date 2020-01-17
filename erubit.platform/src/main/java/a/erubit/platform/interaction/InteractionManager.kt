@@ -19,6 +19,7 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.TranslateAnimation
 import android.widget.BaseAdapter
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import link.fls.swipestack.SwipeStack.*
 
@@ -49,6 +50,7 @@ class InteractionManager private constructor() {
 			PixelFormat.TRANSLUCENT
 	)
 	private var mInteractionViewWelcome: View? = null
+	private var mInteractionViewFlipcardCourse: View? = null
 	private var mInteractionViewSetCourse: View? = null
 	private var mInteractionViewPhraseCourse: View? = null
 	private var mAnswerLabels: IntArray = IntArray(0)
@@ -71,12 +73,17 @@ class InteractionManager private constructor() {
 
 	private fun createInteractionViews(context: Context) {
 		mInteractionViewWelcome = createWelcomeInteractionView(context)
+		mInteractionViewFlipcardCourse = createFlipcardInteractionView(context)
 		mInteractionViewSetCourse = createChooseInteractionView(context)
 		mInteractionViewPhraseCourse = createPhraseInteractionView(context)
 	}
 
 	private fun createWelcomeInteractionView(context: Context): View {
 		return View.inflate(context, R.layout.view_interaction_welcome, null)
+	}
+
+	private fun createFlipcardInteractionView(context: Context): View {
+		return View.inflate(context, R.layout.view_interaction_flipcard, null)
 	}
 
 	private fun createChooseInteractionView(context: Context): View {
@@ -145,6 +152,7 @@ class InteractionManager private constructor() {
 
 		view = when (lessonType) {
 			WelcomeLesson::class.java.toString() -> populateWelcome(context, lesson, pd.mPresentable as String, listener)
+			FlipcardLesson::class.java.toString() -> populateFlipcardLesson(context, lesson, pd.mPresentable as Lesson.Problem, listener)
 			SetLesson::class.java.toString() -> populateSetLesson(context, lesson, pd.mPresentable as Lesson.Problem, listener)
 			PhraseLesson::class.java.toString() -> populatePhraseLesson(context, lesson, pd.mPresentable as Lesson.Problem, listener)
 			CharacterLesson::class.java.toString() -> populatePhraseLesson(context, lesson, pd.mPresentable as Lesson.Problem, listener)
@@ -169,6 +177,44 @@ class InteractionManager private constructor() {
 			lesson.mProgress!!.trainDate = lesson.mProgress!!.interactionDate
 			ProgressManager.i().save(context, lesson)
 			onInteraction(listener, InteractionEvent.POSITIVE)
+		}
+
+		setupQuickButtons(context, view, lesson, listener)
+
+		return view
+	}
+
+	private fun populateFlipcardLesson(context: Context, lesson: Lesson, problem: Lesson.Problem, listener: InteractionListener): View {
+		val view = mInteractionViewFlipcardCourse!!
+		val prob = problem as FlipcardLesson.Problem
+
+		val fv = view.findViewById<LinearLayout>(R.id.face)
+		fv.findViewById<TextView>(R.id.content).text = prob.flipcard.face.content
+		fv.findViewById<TextView>(R.id.helper).text = prob.flipcard.face.helper
+		fv.findViewById<TextView>(R.id.side).text = prob.flipcard.face.side
+		val fva = fv.findViewById<LinearLayout>(R.id.additions)
+		fva.removeAllViews()
+		for (a in prob.flipcard.face.additions) {
+			val tv = TextView(context)
+			tv.text = a
+			tv.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+			fva.addView(tv)
+		}
+
+		view.findViewById<TextView>(R.id.back).text = prob.flipcard.back.content
+
+		view.findViewById<View>(R.id.familiar).setOnClickListener {
+			prob.attempt(true)
+			prob.treatResult()
+			lesson.mProgress!!.trainDate = System.currentTimeMillis()
+
+			ProgressManager.i().save(context, lesson)
+
+			onInteraction(listener, InteractionEvent.POSITIVE)
+		}
+		view.findViewById<View>(R.id.no_idea).setOnClickListener {
+			prob.attempt(false)
+			onInteraction(listener, InteractionEvent.NEGATIVE)
 		}
 
 		setupQuickButtons(context, view, lesson, listener)

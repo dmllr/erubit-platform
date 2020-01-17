@@ -9,6 +9,7 @@
     <string name="shadowing_hint">Варианты ответов скрыты, чтобы заставить вашу память действительно работать.\n\n\n\nНАЖМИТЕ ЧТОБЫ ПОКАЗАТЬ ВАРИАНТЫ</string>
     <string name="swipe_to_dismiss">СДВИНЬТЕ В СТОРОНУ</string>
     <string name="no_idea">НЕ ЗНАЮ</string>
+    <string name="im_fine">ЗНАКОМО</string>
 
     <string name="disable_for">Запрет на</string>
     <string name="_1h">1ч</string>

@@ -7,6 +7,27 @@
     "<p>It's made for demo purposes only.</p>"
   ],
   "lessons": [
+    {
+      "id": "A",
+      "title": "Flipcard",
+      "type": "Flipcard",
+      "cards": [
+        {
+          "i": 0,
+          "face": {
+            "content": "語",
+            "helper": "<b>kun</b>:\nかた.る\nかた.らう\n<b>on</b>:\nゴ",
+            "side": "{語:ご}\n{語:かた}り\n{語:ご}{源:げん}\n{語:ご}{彙:い}\n{語:かた}\n{語:ご}{学:がく}\n{語:ご}{句:く}",
+            "add": [
+              "Parts: 口 五 言"
+            ]
+          },
+          "back": {
+            "content": "On reading compounds\n語 【ゴ】 language, word\n語学 【ゴガク】 study of foreign languages, linguistics\n標語 【ヒョウゴ】 motto, slogan, catchword\n造語 【ゾウゴ】 coined word, coinage, neologism\n\nKun reading compounds\n語る 【かたる】 to talk about, to speak of, to tell, to narrate, to recite, to chant, to indicate, to show\n語るに落ちる 【かたるにおちる】 to let slip a secret, to let the cat out of the bag\n語らう 【かたらう】 to talk, to tell, to recite, to pledge, to conspire with"
+          }
+        }
+      ]
+    },
     "@ref demo_welcome",
     {
       "id": "471fc60e13024b6c85db5cb25f511569",

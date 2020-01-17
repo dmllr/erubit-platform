@@ -52,6 +52,7 @@ class LanguageCourse : Course() {
 					val lessonType = ljo.getString("type")
 					ls.add(when (lessonType) {
 						"Welcome" -> WelcomeLesson(this).fromJson(context, ljo)
+						"Flipcard" -> FlipcardLesson(this).fromJson(context, ljo)
 						"Set" -> SetLesson(this).fromJson(context, ljo)
 						"Phrase" -> PhraseLesson(this).fromJson(context, ljo)
 						"Character" -> CharacterLesson(this).fromJson(context, ljo)
