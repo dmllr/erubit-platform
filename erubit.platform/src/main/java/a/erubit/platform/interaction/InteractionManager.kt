@@ -19,9 +19,7 @@ import android.view.animation.TranslateAnimation
 import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.TextView
-
-import link.fls.swipestack.SwipeHelper
-import link.fls.swipestack.SwipeStack.SwipeStackListener
+import link.fls.swipestack.SwipeStack.*
 
 import t.FlipLayout.FlipLayout
 import t.FlipLayout.FlipLayout.OnFlipListener
@@ -215,10 +213,16 @@ class InteractionManager private constructor() {
 			tv.setOnClickListener(answerTouchListener)
 		}
 
-		viewVariants.findViewById<View>(R.id.mistaken).setOnClickListener {
+		viewVariants.findViewById<View>(R.id.no_idea).setOnClickListener {
 			lesson.mProgress!!.interactionDate = System.currentTimeMillis()
 			problem.attempt(false)
 			swipeStack.swipeTopViewToLeft()
+		}
+		val shadowing : View = viewVariants.findViewById<View>(R.id.shadowing)
+		val shadowingEnabled: Boolean = TinyDB(context).getBoolean(C.SP_ENABLED_SHADOWING, true)
+		shadowing.visibility = if (shadowingEnabled) View.VISIBLE else View.GONE
+		shadowing.setOnClickListener {
+			it.visibility = View.GONE
 		}
 
 		val viewMeaning = inflater.inflate(R.layout.view_card_explaination, swipeStack, false)
@@ -243,21 +247,6 @@ class InteractionManager private constructor() {
 					ProgressManager.i().save(context, lesson)
 
 					return
-				}
-				when (position) {
-					0 -> {
-						lesson.mProgress!!.interactionDate = System.currentTimeMillis()
-
-						problem.attempt(false)
-						problem.treatResult()
-
-						ProgressManager.i().save(context, lesson)
-
-						val v = swipeStack.adapter.getView(1, null, null)
-						val sh = SwipeHelper(swipeStack)
-						sh.registerObservedView(v, 0f, 0f)
-						sh.swipeViewToLeft()
-					}
 				}
 			}
 
@@ -480,13 +469,11 @@ class InteractionManager private constructor() {
 
 
 	private class SetLessonFullStackAdapter internal constructor(context: Context, viewVariants: View, viewExplanation: View) : BaseAdapter() {
-		private val shadowingEnabled: Boolean
-		private val mViewDoYouKnow: View
-		private val mViewVariants: View
-		private val mViewExplanation: View
+		private val mViewVariants: View = viewVariants
+		private val mViewExplanation: View = viewExplanation
 
 		override fun getCount(): Int {
-			return if (shadowingEnabled) 3 else 2
+			return 2
 		}
 
 		override fun getItem(position: Int): Any {
@@ -498,21 +485,11 @@ class InteractionManager private constructor() {
 		}
 
 		override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
-			return when (position + if (shadowingEnabled) 0 else 1) {
-				0 -> mViewDoYouKnow
-				1 -> mViewVariants
-				2 -> mViewExplanation
+			return when (position) {
+				0 -> mViewVariants
+				1 -> mViewExplanation
 				else -> throw UnsupportedOperationException("In SetLessonFullStackAdapter.getView position has a wrong value `$position`")
 			}
-		}
-
-		init {
-			val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-			shadowingEnabled = TinyDB(context).getBoolean(C.SP_ENABLED_SHADOWING, true)
-			mViewDoYouKnow = inflater.inflate(R.layout.view_card_know_dont_know, viewVariants.parent as ViewGroup?, false)
-			mViewVariants = viewVariants
-			mViewExplanation = viewExplanation
 		}
 	}
 
