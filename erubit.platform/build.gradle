@@ -26,11 +26,9 @@ android {
 }
 
 dependencies {
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -40,12 +38,14 @@ dependencies {
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.nex3z:flow-layout:0.1.2'
     implementation 'oss.dmllr:swipestack:0.3.4'
     testImplementation 'junit:junit:4.12'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
     mavenCentral()
