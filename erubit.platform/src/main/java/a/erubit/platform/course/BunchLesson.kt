@@ -16,8 +16,7 @@ import kotlin.math.max
 abstract class BunchLesson internal constructor(course: Course) : Lesson(course) {
 	private val timeToForget = 1000 * 60 * 60 * 24 * 2 // Two days
 
-	var mSet: ArrayList<Item>? = null
-	var mVariants: ArrayList<String>? = null
+	open var mSet: ArrayList<Item>? = null
 
 	protected abstract val rankFamiliar: Int
 	protected abstract val rankLearned: Int
@@ -148,7 +147,7 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		return progress
 	}
 
-	private fun loadProgress(context: Context): Progress {
+	fun loadProgress(context: Context): Progress {
 		val json = ProgressManager.i().load(context, id)
 
 		val progress = Progress()
@@ -184,42 +183,10 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		return progress.nextInteractionDate >= 0 && progress.nextInteractionDate <= System.currentTimeMillis()
 	}
 
-	fun fromJson(context: Context, jo: JSONObject): BunchLesson {
-		try {
-			id = jo.getString("id")
-			name = U.getStringValue(context, jo, "title")
-
-			val progress = loadProgress(context)
-
-			val jset = jo.getJSONArray("set")
-			val set = ArrayList<Item>(jset.length())
-			for (i in 0 until jset.length()) {
-				val jso = jset.getJSONObject(i)
-				set.add(Item().fromJsonObject(jso).withProgress(progress))
-			}
-			mSet = set
-
-			val variants = ArrayList<String>(20)
-			val jvar = jo.getJSONArray("noise")
-			for (i in 0 until jvar.length()) {
-				variants.add(jvar.getString(i))
-			}
-			mVariants = variants
-
-			mProgress = progress
-		} catch (ignored: IOException) {
-			ignored.printStackTrace()
-		} catch (ignored: JSONException) {
-			ignored.printStackTrace()
-		}
-
-		return this
-	}
+	abstract fun fromJson(context: Context, jo: JSONObject): BunchLesson
 
 
-	inner class Problem internal constructor(lesson: Lesson, val item: Item) : Lesson.Problem(lesson) {
-		var variants: Array<String?>
-
+	abstract inner class Problem internal constructor(lesson: Lesson, val item: Item) : Lesson.Problem(lesson) {
 		override fun spied() {
 			item.fail()
 		}
@@ -231,18 +198,11 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 
 		val knowledge: Knowledge
 			get() = item.knowledge
-
-		init {
-			text = item.character
-			meaning = item.meaning
-			variants = arrayOfNulls(C.NUMBER_OF_ANSWERS)
-		}
 	}
 
-	inner class Item internal constructor() {
+
+	open inner class Item internal constructor() {
 		var id = 0
-		var character: String = ""
-		var meaning: String = ""
 
 		var knowledgeLevel = 0
 		var touchDate: Long = 0
@@ -251,10 +211,8 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		var showDate: Long = 0
 
 		@Throws(JSONException::class)
-		fun fromJsonObject(jso: JSONObject): Item {
+		open fun fromJsonObject(jso: JSONObject): Item {
 			id = jso.getInt("i")
-			character = jso.getString("c")
-			meaning = jso.getString("m")
 
 			return this
 		}

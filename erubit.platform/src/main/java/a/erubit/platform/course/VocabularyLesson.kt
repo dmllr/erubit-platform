@@ -1,6 +1,7 @@
 package a.erubit.platform.course
 
-class VocabularyLesson internal constructor(course: Course) : BunchLesson(course) {
+
+class VocabularyLesson internal constructor(course: Course) : CharacterLesson(course) {
 
 	override val rankFamiliar: Int
 		get() = 1
@@ -9,7 +10,10 @@ class VocabularyLesson internal constructor(course: Course) : BunchLesson(course
 	override val rankLearnedWell: Int
 		get() = 1
 
-	override fun getPresentable(problemItem: Item): PresentableDescriptor {
+	override fun getPresentable(problemItem: BunchLesson.Item): PresentableDescriptor {
+		if (problemItem !is Item)
+			return PresentableDescriptor.ERROR
+
 		return PresentableDescriptor(Problem(this, problemItem))
 	}
 }

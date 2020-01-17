@@ -51,8 +51,6 @@ abstract class Lesson internal constructor(val course: Course) {
 
 
 	abstract class Problem(val lesson: Lesson) {
-		var text: String = ""
-		var meaning: String = ""
 		var mSucceed = true
 
 		fun attempt(solved: Boolean) {
@@ -61,6 +59,7 @@ abstract class Lesson internal constructor(val course: Course) {
 
 		abstract fun spied()
 		abstract fun treatResult()
+		abstract fun isSolved(answer: String): Boolean
 	}
 
 }

@@ -1,10 +1,15 @@
 package a.erubit.platform.course
 
+import android.content.Context
+import org.json.JSONException
+import org.json.JSONObject
+import u.C
 import u.U
+import java.io.IOException
 import java.util.*
 
 
-class CharacterLesson internal constructor(course: Course) : BunchLesson(course) {
+open class CharacterLesson internal constructor(course: Course) : BunchLesson(course) {
 	override val rankFamiliar: Int
 		get() = 1
 	override val rankLearned: Int
@@ -12,7 +17,12 @@ class CharacterLesson internal constructor(course: Course) : BunchLesson(course)
 	override val rankLearnedWell: Int
 		get() = 3
 
-	override fun getPresentable(problemItem: Item): PresentableDescriptor {
+	var mVariants: ArrayList<String>? = null
+
+	override fun getPresentable(problemItem: BunchLesson.Item): PresentableDescriptor {
+		if (problemItem !is Item)
+			return PresentableDescriptor.ERROR
+
 		val random = Random()
 		val apxSize = 4 + random.nextInt(4)
 		val regex = "\\s+:\\s+"
@@ -28,7 +38,8 @@ class CharacterLesson internal constructor(course: Course) : BunchLesson(course)
 		val noise = mVariants ?: return PresentableDescriptor.ERROR
 
 		for (k in 0 until apxSize) {
-			val randomWords = U.defurigana(set[random.nextInt(set.size)].meaning).split(regex).toTypedArray()
+			val c = set[random.nextInt(set.size)] as Item
+			val randomWords = U.defurigana(c.meaning).split(regex).toTypedArray()
 			for (s in randomWords)
 				if (!variants.contains(s))
 					variants.add(s)
@@ -42,5 +53,66 @@ class CharacterLesson internal constructor(course: Course) : BunchLesson(course)
 		U.shuffleStrArray(problem.variants)
 
 		return PresentableDescriptor(problem)
+	}
+
+	override fun fromJson(context: Context, jo: JSONObject): BunchLesson {
+		try {
+			id = jo.getString("id")
+			name = U.getStringValue(context, jo, "title")
+
+			val progress = loadProgress(context)
+
+			val jset = jo.getJSONArray("set")
+			val set = ArrayList<BunchLesson.Item>(jset.length())
+			for (i in 0 until jset.length()) {
+				val jso = jset.getJSONObject(i)
+				set.add(Item().fromJsonObject(jso).withProgress(progress))
+			}
+			mSet = set
+
+			val variants = ArrayList<String>(20)
+			val jvar = jo.getJSONArray("noise")
+			for (i in 0 until jvar.length()) {
+				variants.add(jvar.getString(i))
+			}
+			mVariants = variants
+
+			mProgress = progress
+		} catch (ignored: IOException) {
+			ignored.printStackTrace()
+		} catch (ignored: JSONException) {
+			ignored.printStackTrace()
+		}
+
+		return this
+	}
+
+
+	inner class Item internal constructor() : BunchLesson.Item() {
+		var character: String = ""
+		var meaning: String = ""
+
+		override fun fromJsonObject(jso: JSONObject): BunchLesson.Item {
+			character = jso.getString("c")
+			meaning = jso.getString("m")
+
+			return this
+		}
+	}
+
+
+	inner class Problem internal constructor(lesson: Lesson, item: Item) : BunchLesson.Problem(lesson, item) {
+		var text: String = ""
+		var meaning: String = ""
+		var variants: Array<String?> = arrayOfNulls(C.NUMBER_OF_ANSWERS)
+
+		init {
+			text = item.character
+			meaning = item.meaning
+		}
+
+		override fun isSolved(answer: String): Boolean {
+			return U.equals(meaning, answer)
+		}
 	}
 }

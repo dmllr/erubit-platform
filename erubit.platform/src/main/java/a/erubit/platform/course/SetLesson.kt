@@ -5,7 +5,7 @@ import u.U
 import java.util.*
 
 
-class SetLesson internal constructor(course: Course) : BunchLesson(course) {
+class SetLesson internal constructor(course: Course) : CharacterLesson(course) {
 	companion object {
 		const val RANK_FAMILIAR = 2
 		const val RANK_LEARNED = 3
@@ -19,7 +19,10 @@ class SetLesson internal constructor(course: Course) : BunchLesson(course) {
 	override val rankLearnedWell: Int
 		get() = RANK_LEARNED_WELL
 
-	override fun getPresentable(problemItem: Item): PresentableDescriptor {
+	override fun getPresentable(problemItem: BunchLesson.Item): PresentableDescriptor {
+		if (problemItem !is Item)
+			return PresentableDescriptor.ERROR
+
 		val problem = Problem(this, problemItem)
 
 		val variants = mVariants ?: return PresentableDescriptor.ERROR

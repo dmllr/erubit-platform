@@ -146,10 +146,10 @@ class ProgressFragment : Fragment() {
 					mList.add(ContentItem(lesson.getProgress(ctx).getExplanation(ctx), ""))
 				}
 
-				if (lesson is BunchLesson) {
-                    // including SetLesson, VocabularyLesson, PhraseLesson and CharacterLesson
+				if (lesson is CharacterLesson) {
+                    // including SetLesson, VocabularyLesson, PhraseLesson
 					for (item in lesson.mSet!!) {
-						mList.add(ContentItem(item.character, getKnowledgeText(item.knowledgeLevel)))
+						mList.add(ContentItem((item as CharacterLesson.Item).character, getKnowledgeText(item.knowledgeLevel)))
 					}
 				}
 			}

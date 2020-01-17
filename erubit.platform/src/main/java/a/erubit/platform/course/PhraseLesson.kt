@@ -1,10 +1,11 @@
 package a.erubit.platform.course
 
+import org.json.JSONObject
 import u.U
 import java.util.*
 
 
-class PhraseLesson internal constructor(course: Course) : BunchLesson(course) {
+class PhraseLesson internal constructor(course: Course) : CharacterLesson(course) {
 	private val mRandom: Random = Random()
 	private val mApxSize: Int = 3 + mRandom.nextInt(3)
 
@@ -15,7 +16,10 @@ class PhraseLesson internal constructor(course: Course) : BunchLesson(course) {
 	override val rankLearnedWell: Int
 		get() = 3
 
-	override fun getPresentable(problemItem: Item): PresentableDescriptor {
+	override fun getPresentable(problemItem: BunchLesson.Item): PresentableDescriptor {
+		if (problemItem !is Item)
+			return PresentableDescriptor.ERROR
+
 		val problem = Problem(this, problemItem)
 		val words = U.defurigana(problem.meaning).split("\\s+").toTypedArray()
 
