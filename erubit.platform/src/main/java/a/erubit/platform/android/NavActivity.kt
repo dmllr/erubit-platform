@@ -239,7 +239,7 @@ class NavActivity :
 			}
 			CourseInteractionAction.SHOW_INFO -> showCourseInfo(course)
 			CourseInteractionAction.PRACTICE -> {
-				val lesson = CourseManager.i().getNextLesson(this, course)
+				val lesson = CourseManager.i().getNextLesson(course)
 				fragment = if (lesson == null) LessonsFragment() else CourseTrainingFragment()
 				fragment.arguments = bundle
 				putFragment(fragment)

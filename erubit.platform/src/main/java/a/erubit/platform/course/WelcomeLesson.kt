@@ -2,7 +2,9 @@ package a.erubit.platform.course
 
 import a.erubit.platform.R
 import android.content.Context
+import com.google.gson.JsonElement
 import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
 import org.json.JSONException
 import org.json.JSONObject
 import u.U
@@ -61,20 +63,15 @@ class WelcomeLesson internal constructor(course: Course) : Lesson(course) {
 		return mProgress!!.interactionDate == 0L
 	}
 
-	fun loadFromResource(context: Context, resourceId: Int): WelcomeLesson {
+	fun fromJson(context: Context, jo: JSONObject): WelcomeLesson {
 		try {
-			val json = U.loadStringResource(context, resourceId)
-			val jo = JSONObject(json)
-
 			id = jo.getString("id")
 			name = U.getStringValue(context, jo, "title")
 			welcomeText = U.getStringValue(context, jo, "description")
 			mProgress = loadProgress(context)
-		} catch (ignored: IOException) {
-			ignored.printStackTrace()
-		} catch (ignored: JSONException) {
-			ignored.printStackTrace()
 		}
+		catch (_: IOException) { }
+		catch (_: JSONException) { }
 
 		return this
 	}

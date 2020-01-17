@@ -7,9 +7,48 @@
     "<p>It's made for demo purposes only.</p>"
   ],
   "lessons": [
-    "demo_welcome",
-    "demo_1",
-    "demo_2",
-    "demo_3"
+    "@ref demo_welcome",
+    {
+      "id": "471fc60e13024b6c85db5cb25f511569",
+      "title": "Japanese greetings",
+      "type": "Set",
+      "set": [
+        { "i": 0, "c": "ohayō gozaimasu", "m": "good morning" },
+        { "i": 1, "c": "konnichi-wa", "m": "hello" },
+        { "i": 2, "c": "komban-wa", "m": "good evening" },
+        { "i": 3, "c": "oyasumi-nasai", "m": "goodnight" }
+      ],
+      "noise": ["good morning", "hello", "good evening", "goodnight", "goodbye", "hi", "welcome"]
+    },
+    {
+      "id": "8ae82ad6066a4a5495f1506a4257b437",
+      "title": "Simple japanese sentences",
+      "type": "Phrase",
+      "set": [
+        { "i": 0, "c": "いい　おてんき　です", "m": "it is a good weather" },
+        { "i": 1, "c": "いい　おてんき　で{は:wa}　ありません", "m": "it is not a good weather" },
+        { "i": 2, "c": "わたしの　せんせい　です", "m": "it is my teacher" },
+        { "i": 3, "c": "いい　いぬ　で{は:wa}　ありません", "m": "it's not a good dog" },
+        { "i": 4, "c": "いい　いぬ　で{は:wa}　ありません でした", "m": "it was not a good dog" }
+      ],
+      "noise": [
+        "cat", "bird", "condition", "winter", "summer", "ninja", "water"
+      ]
+    },
+    {
+      "id": "f3e746c1359b418d8eed3318e88a4313",
+      "title": "一二七九人",
+      "type": "Character",
+      "set": [
+        { "i": 0, "c": "{人:ひと}", "m": "man : person : human being : people" },
+        { "i": 3, "c": "{一:いち}", "m": "one : first : beginning" },
+        { "i": 6, "c": "{七:しち}", "m": "seven" },
+        { "i": 7, "c": "{九:きゅう}", "m": "nine" },
+        { "i": 8, "c": "{二:に}", "m": "two" }
+      ],
+      "noise": [
+        "three", "for", "five", "six", "eight", "nine", "female", "male"
+      ]
+    }
   ]
 }

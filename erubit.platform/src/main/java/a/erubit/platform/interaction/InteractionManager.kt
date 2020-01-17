@@ -94,7 +94,7 @@ class InteractionManager private constructor() {
 	}
 
 	fun getInteractionView(context: Context, listener: InteractionListener): View? {
-		val lesson = CourseManager.i().getNextLesson(context)
+		val lesson = CourseManager.i().getNextLesson()
 
 		return lesson?.let { getInteractionView(context, it, listener) }
 	}
@@ -110,7 +110,7 @@ class InteractionManager private constructor() {
 			ProgressManager.i().save(context, lesson)
 
 			// would take next lesson and presentable
-			pd = CourseManager.i().getNextLesson(context)?.getNextPresentable(context) ?: PresentableDescriptor.ERROR
+			pd = CourseManager.i().getNextLesson()?.getNextPresentable(context) ?: PresentableDescriptor.ERROR
 		}
 
 		if (pd.mStatus === Lesson.Status.OK) {
@@ -231,7 +231,7 @@ class InteractionManager private constructor() {
 		val problemKnowledge = (problem as BunchLesson.Problem).knowledge
 		swipeStack.adapter = when(problemKnowledge) {
 			BunchLesson.Knowledge.Untouched -> SetLessonWelcomeStackAdapter(viewMeaning)
-			else -> SetLessonFullStackAdapter(context, viewVariants, viewMeaning)
+			else -> SetLessonFullStackAdapter(viewVariants, viewMeaning)
 		}
 
 		swipeStack.setListener(object : SwipeStackListener {
@@ -468,7 +468,7 @@ class InteractionManager private constructor() {
 	}
 
 
-	private class SetLessonFullStackAdapter internal constructor(context: Context, viewVariants: View, viewExplanation: View) : BaseAdapter() {
+	private class SetLessonFullStackAdapter internal constructor(viewVariants: View, viewExplanation: View) : BaseAdapter() {
 		private val mViewVariants: View = viewVariants
 		private val mViewExplanation: View = viewExplanation
 

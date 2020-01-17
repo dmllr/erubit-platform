@@ -16,7 +16,6 @@ import kotlin.math.max
 abstract class BunchLesson internal constructor(course: Course) : Lesson(course) {
 	private val timeToForget = 1000 * 60 * 60 * 24 * 2 // Two days
 
-	private var contentResourceId = 0
 	var mSet: ArrayList<Item>? = null
 	var mVariants: ArrayList<String>? = null
 
@@ -25,8 +24,6 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 	protected abstract val rankLearnedWell: Int
 
 	override fun getNextPresentable(context: Context): PresentableDescriptor {
-		loadHeavyContent(context)
-
 		val set = mSet ?: return PresentableDescriptor.ERROR
 
 		var size = set.size
@@ -71,8 +68,6 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 	protected abstract fun getPresentable(problemItem: Item): PresentableDescriptor
 
 	override fun getPresentables(context: Context): ArrayList<PresentableDescriptor> {
-		loadHeavyContent(context)
-
 		val set = mSet ?: return ArrayList(0)
 		val size = set.size
 		val descriptors = ArrayList<PresentableDescriptor>(size)
@@ -83,10 +78,6 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		}
 
 		return descriptors
-	}
-
-	fun loadHeavyContent(context: Context) {
-		loadFromResource(context, contentResourceId, true)
 	}
 
 	override fun updateProgress(): a.erubit.platform.course.Progress {
@@ -151,13 +142,13 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 	}
 
 	override fun getProgress(context: Context): a.erubit.platform.course.Progress {
-		val progress = loadProgress(context, true)
+		val progress = loadProgress(context)
 		mProgress = progress
 
 		return progress
 	}
 
-	private fun loadProgress(context: Context, withHeavyContent: Boolean): Progress {
+	private fun loadProgress(context: Context): Progress {
 		val json = ProgressManager.i().load(context, id)
 
 		val progress = Progress()
@@ -178,7 +169,7 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		if (jo.has("familiarity"))
 			progress.familiarity = jo["familiarity"].asInt
 
-		if (withHeavyContent && jo.has("map")) {
+		if (jo.has("map")) {
 			jo = jo["map"].asJsonObject
 			for (k in jo.keySet())
 				progress.appendFromJson(k.toInt(), jo[k].asJsonObject)
@@ -193,34 +184,27 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		return progress.nextInteractionDate >= 0 && progress.nextInteractionDate <= System.currentTimeMillis()
 	}
 
-	fun loadFromResource(context: Context, resourceId: Int, withHeavyContent: Boolean): BunchLesson {
-		contentResourceId = resourceId
-
+	fun fromJson(context: Context, jo: JSONObject): BunchLesson {
 		try {
-			val json = U.loadStringResource(context, resourceId)
-			val jo = JSONObject(json)
-
 			id = jo.getString("id")
 			name = U.getStringValue(context, jo, "title")
 
-			val progress = loadProgress(context, withHeavyContent)
+			val progress = loadProgress(context)
 
-			if (withHeavyContent) {
-				val jset = jo.getJSONArray("set")
-				val set = ArrayList<Item>(jset.length())
-				for (i in 0 until jset.length()) {
-					val jso = jset.getJSONObject(i)
-					set.add(Item().fromJsonObject(jso).withProgress(progress))
-				}
-				mSet = set
-
-				val variants = ArrayList<String>(20)
-				val jvar = jo.getJSONArray("noise")
-				for (i in 0 until jvar.length()) {
-					variants.add(jvar.getString(i))
-				}
-				mVariants = variants
+			val jset = jo.getJSONArray("set")
+			val set = ArrayList<Item>(jset.length())
+			for (i in 0 until jset.length()) {
+				val jso = jset.getJSONObject(i)
+				set.add(Item().fromJsonObject(jso).withProgress(progress))
 			}
+			mSet = set
+
+			val variants = ArrayList<String>(20)
+			val jvar = jo.getJSONArray("noise")
+			for (i in 0 until jvar.length()) {
+				variants.add(jvar.getString(i))
+			}
+			mVariants = variants
 
 			mProgress = progress
 		} catch (ignored: IOException) {
@@ -231,6 +215,7 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 
 		return this
 	}
+
 
 	inner class Problem internal constructor(lesson: Lesson, val item: Item) : Lesson.Problem(lesson) {
 		var variants: Array<String?>

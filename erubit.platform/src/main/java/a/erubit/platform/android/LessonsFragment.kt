@@ -92,7 +92,7 @@ class LessonsFragment : Fragment() {
 
 
 	internal inner class LessonsListAdapter(course: Course) : RecyclerView.Adapter<LessonsListAdapter.ViewHolder>() {
-		private val mList = course.getLessons(context!!)
+		private val mList = course.lessons!!
 
 		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 			val inflater = LayoutInflater.from(parent.context)

@@ -139,7 +139,7 @@ class ProgressFragment : Fragment() {
 			mList = ArrayList(10)
             val ctx = context!!
 
-			for (lesson in course!!.getLessons(ctx)) {
+			for (lesson in course!!.lessons!!) {
 				mList.add(HeaderItem(lesson))
 
 				if (lesson is WelcomeLesson) {
@@ -148,9 +148,6 @@ class ProgressFragment : Fragment() {
 
 				if (lesson is BunchLesson) {
                     // including SetLesson, VocabularyLesson, PhraseLesson and CharacterLesson
-
-                    lesson.loadHeavyContent(ctx)
-
 					for (item in lesson.mSet!!) {
 						mList.add(ContentItem(item.character, getKnowledgeText(item.knowledgeLevel)))
 					}

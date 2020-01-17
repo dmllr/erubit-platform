@@ -109,7 +109,7 @@ class CourseManager private constructor() {
 		}
 	}
 
-	fun getNextLesson(context: Context): Lesson? {
+	fun getNextLesson(): Lesson? {
 		val size = mActiveCourses.size
 		if (size < 1)
 			return null
@@ -117,11 +117,11 @@ class CourseManager private constructor() {
 		val i = Random().nextInt(mActiveCourses.size)
 		val course = mActiveCourses[i]
 
-		return getNextLesson(context, course)
+		return getNextLesson(course)
 	}
 
-	fun getNextLesson(context: Context, course: Course): Lesson? {
-		val lessons = course.getLessons(context)
+	fun getNextLesson(course: Course): Lesson? {
+		val lessons = course.lessons!!
 		val size = lessons.size
 		if (size < 1)
 			return null
