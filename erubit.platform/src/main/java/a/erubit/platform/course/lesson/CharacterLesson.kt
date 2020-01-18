@@ -18,7 +18,7 @@ open class CharacterLesson internal constructor(course: Course) : BunchLesson(co
 	override val rankLearnedWell: Int
 		get() = 3
 
-	var mVariants: ArrayList<String>? = null
+	var mNoise: ArrayList<String>? = null
 
 	override fun getPresentable(problemItem: BunchLesson.Item): PresentableDescriptor {
 		if (problemItem !is Item)
@@ -36,7 +36,7 @@ open class CharacterLesson internal constructor(course: Course) : BunchLesson(co
 		variants.addAll(listOf(*words))
 
 		val set = mSet ?: return PresentableDescriptor.ERROR
-		val noise = mVariants ?: return PresentableDescriptor.ERROR
+		val noise = mNoise ?: return PresentableDescriptor.ERROR
 
 		for (k in 0 until apxSize) {
 			val c = set[random.nextInt(set.size)] as Item
@@ -76,7 +76,7 @@ open class CharacterLesson internal constructor(course: Course) : BunchLesson(co
 			for (i in 0 until jvar.length()) {
 				variants.add(jvar.getString(i))
 			}
-			mVariants = variants
+			mNoise = variants
 
 			mProgress = progress
 		} catch (ignored: IOException) {

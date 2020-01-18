@@ -26,7 +26,7 @@ class SetLesson internal constructor(course: Course) : CharacterLesson(course) {
 
 		val problem = Problem(this, problemItem)
 
-		val variants = mVariants ?: return PresentableDescriptor.ERROR
+		val variants = mNoise ?: return PresentableDescriptor.ERROR
 		val size = variants.size
 
 		val answerIndices = IntArray(C.NUMBER_OF_ANSWERS)

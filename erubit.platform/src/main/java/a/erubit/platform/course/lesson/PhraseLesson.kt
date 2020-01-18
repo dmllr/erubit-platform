@@ -26,7 +26,7 @@ class PhraseLesson internal constructor(course: Course) : CharacterLesson(course
 		problem.variants = arrayOfNulls(words.size + mApxSize)
 		System.arraycopy(words, 0, problem.variants, 0, words.size)
 
-		val variants = mVariants ?: return PresentableDescriptor.ERROR
+		val variants = mNoise ?: return PresentableDescriptor.ERROR
 
 		for (k in 0 until mApxSize)
 			problem.variants[words.size + k] = variants[mRandom.nextInt(variants.size)]
