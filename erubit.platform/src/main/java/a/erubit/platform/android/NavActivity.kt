@@ -79,11 +79,11 @@ class NavActivity :
 		supportFragmentManager.addOnBackStackChangedListener {
 			if (supportFragmentManager.backStackEntryCount > 0) { // show back button
 				supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-				toolbar.setNavigationOnClickListener { v: View? -> onBackPressed() }
+				toolbar.setNavigationOnClickListener { onBackPressed() }
 			} else { //show hamburger
 				supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 				toggle.syncState()
-				toolbar.setNavigationOnClickListener { v: View? -> drawer.openDrawer(GravityCompat.START) }
+				toolbar.setNavigationOnClickListener { drawer.openDrawer(GravityCompat.START) }
 			}
 		}
 
