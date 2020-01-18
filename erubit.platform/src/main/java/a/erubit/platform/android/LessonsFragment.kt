@@ -4,7 +4,7 @@ package a.erubit.platform.android
 import a.erubit.platform.R
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
-import a.erubit.platform.course.Lesson
+import a.erubit.platform.course.lesson.Lesson
 
 import android.content.Context
 import android.os.Build

@@ -1,14 +1,15 @@
-package a.erubit.platform.course
+package a.erubit.platform.course.lesson
 
 import a.erubit.platform.R
+import a.erubit.platform.course.Course
+import a.erubit.platform.course.ItemProgress
+import a.erubit.platform.course.ProgressManager
 import android.content.Context
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONException
 import org.json.JSONObject
 import u.C
-import u.U
-import java.io.IOException
 import java.util.*
 import kotlin.math.max
 

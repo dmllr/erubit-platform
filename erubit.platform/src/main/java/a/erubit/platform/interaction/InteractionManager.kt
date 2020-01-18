@@ -2,7 +2,8 @@ package a.erubit.platform.interaction
 
 import a.erubit.platform.R
 import a.erubit.platform.course.*
-import a.erubit.platform.course.Lesson.PresentableDescriptor
+import a.erubit.platform.course.lesson.*
+import a.erubit.platform.course.lesson.Lesson.PresentableDescriptor
 
 import android.content.Context
 import android.graphics.PixelFormat

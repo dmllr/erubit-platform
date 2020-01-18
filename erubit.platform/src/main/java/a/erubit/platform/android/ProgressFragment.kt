@@ -4,6 +4,10 @@ import a.erubit.platform.R
 import a.erubit.platform.android.LessonsFragment.OnLessonInteractionListener
 import a.erubit.platform.course.*
 import a.erubit.platform.course.CourseManager
+import a.erubit.platform.course.lesson.CharacterLesson
+import a.erubit.platform.course.lesson.Lesson
+import a.erubit.platform.course.lesson.SetLesson
+import a.erubit.platform.course.lesson.WelcomeLesson
 
 import android.content.Context
 import android.os.Bundle

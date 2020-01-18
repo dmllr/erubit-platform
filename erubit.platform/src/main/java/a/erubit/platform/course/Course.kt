@@ -1,5 +1,6 @@
 package a.erubit.platform.course
 
+import a.erubit.platform.course.lesson.Lesson
 import java.util.*
 
 

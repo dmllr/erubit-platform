@@ -1,6 +1,6 @@
-package a.erubit.platform.course
+package a.erubit.platform.course.lesson
 
-import org.json.JSONObject
+import a.erubit.platform.course.Course
 import u.U
 import java.util.*
 

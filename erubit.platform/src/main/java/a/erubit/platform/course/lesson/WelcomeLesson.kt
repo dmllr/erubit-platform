@@ -1,10 +1,10 @@
-package a.erubit.platform.course
+package a.erubit.platform.course.lesson
 
 import a.erubit.platform.R
+import a.erubit.platform.course.Course
+import a.erubit.platform.course.ProgressManager
 import android.content.Context
-import com.google.gson.JsonElement
 import com.google.gson.JsonParser
-import com.google.gson.JsonPrimitive
 import org.json.JSONException
 import org.json.JSONObject
 import u.U

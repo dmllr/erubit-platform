@@ -1,6 +1,7 @@
 package a.erubit.platform.course
 
 import a.erubit.platform.R
+import a.erubit.platform.course.lesson.Lesson
 import android.content.Context
 import org.json.JSONArray
 import org.json.JSONException

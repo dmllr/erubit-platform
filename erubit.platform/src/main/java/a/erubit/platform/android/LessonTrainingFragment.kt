@@ -2,7 +2,7 @@ package a.erubit.platform.android
 
 import a.erubit.platform.R
 import a.erubit.platform.course.CourseManager
-import a.erubit.platform.course.Lesson
+import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.interaction.InteractionManager
 
 import android.os.Bundle

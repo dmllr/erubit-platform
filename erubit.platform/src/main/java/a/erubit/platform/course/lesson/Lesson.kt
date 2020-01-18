@@ -1,5 +1,7 @@
-package a.erubit.platform.course
+package a.erubit.platform.course.lesson
 
+import a.erubit.platform.course.Course
+import a.erubit.platform.course.Progress
 import android.content.Context
 import java.util.*
 

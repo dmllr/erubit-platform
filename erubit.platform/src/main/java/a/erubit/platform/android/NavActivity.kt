@@ -9,7 +9,7 @@ import a.erubit.platform.android.TrainingFragment.OnTrainingInteractionListener
 import a.erubit.platform.android.TrainingFragment.TrainingInteractionAction
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
-import a.erubit.platform.course.Lesson
+import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.interaction.AnalyticsManager
 import android.content.DialogInterface
 import android.content.Intent
