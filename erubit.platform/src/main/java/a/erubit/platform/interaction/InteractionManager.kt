@@ -76,7 +76,7 @@ class InteractionManager private constructor() {
 	}
 
 	private fun createWelcomeInteractionView(context: Context): View {
-		return View.inflate(context, R.layout.view_welcome, null)
+		return View.inflate(context, R.layout.view_interaction_welcome, null)
 	}
 
 	private fun createChooseInteractionView(context: Context): View {
