@@ -14,12 +14,14 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
@@ -48,6 +50,7 @@ dependencies {
     implementation 'oss.dmllr:swipestack:0.3.4'
     testImplementation 'junit:junit:4.12'
 }
+
 repositories {
     mavenCentral()
 }
