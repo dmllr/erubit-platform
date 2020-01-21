@@ -1,6 +1,8 @@
-package a.erubit.platform.course
+package a.erubit.platform.course.lesson
 
 import a.erubit.platform.R
+import a.erubit.platform.course.Course
+import a.erubit.platform.course.ProgressManager
 import android.content.Context
 import com.google.gson.JsonParser
 import org.json.JSONException
@@ -61,20 +63,15 @@ class WelcomeLesson internal constructor(course: Course) : Lesson(course) {
 		return mProgress!!.interactionDate == 0L
 	}
 
-	fun loadFromResource(context: Context, resourceId: Int): WelcomeLesson {
+	fun fromJson(context: Context, jo: JSONObject): WelcomeLesson {
 		try {
-			val json = U.loadStringResource(context, resourceId)
-			val jo = JSONObject(json)
-
 			id = jo.getString("id")
 			name = U.getStringValue(context, jo, "title")
 			welcomeText = U.getStringValue(context, jo, "description")
 			mProgress = loadProgress(context)
-		} catch (ignored: IOException) {
-			ignored.printStackTrace()
-		} catch (ignored: JSONException) {
-			ignored.printStackTrace()
 		}
+		catch (_: IOException) { }
+		catch (_: JSONException) { }
 
 		return this
 	}

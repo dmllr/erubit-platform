@@ -13,11 +13,10 @@
     <string name="understood">Understood</string>
     <string name="camera">Camera</string>
     <string name="not_now">⨯ Close</string>
-    <string name="do_you_know_the_answer">Do you know the answer?</string>
-    <string name="swipe_left">SWIPE LEFT</string>
-    <string name="swipe_right">SWIPE RIGHT</string>
+    <string name="shadowing_hint">The answer options are hidden to make your memory work harder.\n\n\n\nTAP TO SHOW OPTIONS.</string>
     <string name="swipe_to_dismiss">SWIPE TO DISMISS</string>
-    <string name="i_was_mistaken">I WAS MISTAKEN</string>
+    <string name="no_idea">NO IDEA</string>
+    <string name="im_fine">I\'M FINE</string>
 
     <string name="disable_for">Disable for</string>
     <string name="_1h">1h</string>

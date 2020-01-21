@@ -23,7 +23,7 @@ class CourseTrainingFragment : TrainingFragment() {
 		get() {
 			val context = this.context ?: return null
 
-			val lesson = (if (mCourse != null) CourseManager.i().getNextLesson(context, mCourse!!) else CourseManager.i().getNextLesson(context))
+			val lesson = (if (mCourse != null) CourseManager.i().getNextLesson(mCourse!!) else CourseManager.i().getNextLesson())
 				?: return null
 
 			val v = InteractionManager.i().getInteractionView(context, lesson, this) ?: return null

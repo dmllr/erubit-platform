@@ -1,14 +1,15 @@
-package a.erubit.platform.course
+package a.erubit.platform.course.lesson
 
 import a.erubit.platform.R
+import a.erubit.platform.course.Course
+import a.erubit.platform.course.ItemProgress
+import a.erubit.platform.course.ProgressManager
 import android.content.Context
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONException
 import org.json.JSONObject
 import u.C
-import u.U
-import java.io.IOException
 import java.util.*
 import kotlin.math.max
 
@@ -16,17 +17,13 @@ import kotlin.math.max
 abstract class BunchLesson internal constructor(course: Course) : Lesson(course) {
 	private val timeToForget = 1000 * 60 * 60 * 24 * 2 // Two days
 
-	private var contentResourceId = 0
-	var mSet: ArrayList<Item>? = null
-	var mVariants: ArrayList<String>? = null
+	open var mSet: ArrayList<Item>? = null
 
 	protected abstract val rankFamiliar: Int
 	protected abstract val rankLearned: Int
 	protected abstract val rankLearnedWell: Int
 
 	override fun getNextPresentable(context: Context): PresentableDescriptor {
-		loadHeavyContent(context)
-
 		val set = mSet ?: return PresentableDescriptor.ERROR
 
 		var size = set.size
@@ -71,8 +68,6 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 	protected abstract fun getPresentable(problemItem: Item): PresentableDescriptor
 
 	override fun getPresentables(context: Context): ArrayList<PresentableDescriptor> {
-		loadHeavyContent(context)
-
 		val set = mSet ?: return ArrayList(0)
 		val size = set.size
 		val descriptors = ArrayList<PresentableDescriptor>(size)
@@ -83,10 +78,6 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		}
 
 		return descriptors
-	}
-
-	fun loadHeavyContent(context: Context) {
-		loadFromResource(context, contentResourceId, true)
 	}
 
 	override fun updateProgress(): a.erubit.platform.course.Progress {
@@ -151,13 +142,13 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 	}
 
 	override fun getProgress(context: Context): a.erubit.platform.course.Progress {
-		val progress = loadProgress(context, true)
+		val progress = loadProgress(context)
 		mProgress = progress
 
 		return progress
 	}
 
-	private fun loadProgress(context: Context, withHeavyContent: Boolean): Progress {
+	fun loadProgress(context: Context): Progress {
 		val json = ProgressManager.i().load(context, id)
 
 		val progress = Progress()
@@ -178,7 +169,7 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		if (jo.has("familiarity"))
 			progress.familiarity = jo["familiarity"].asInt
 
-		if (withHeavyContent && jo.has("map")) {
+		if (jo.has("map")) {
 			jo = jo["map"].asJsonObject
 			for (k in jo.keySet())
 				progress.appendFromJson(k.toInt(), jo[k].asJsonObject)
@@ -193,48 +184,10 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		return progress.nextInteractionDate >= 0 && progress.nextInteractionDate <= System.currentTimeMillis()
 	}
 
-	fun loadFromResource(context: Context, resourceId: Int, withHeavyContent: Boolean): BunchLesson {
-		contentResourceId = resourceId
+	abstract fun fromJson(context: Context, jo: JSONObject): BunchLesson
 
-		try {
-			val json = U.loadStringResource(context, resourceId)
-			val jo = JSONObject(json)
 
-			id = jo.getString("id")
-			name = U.getStringValue(context, jo, "title")
-
-			val progress = loadProgress(context, withHeavyContent)
-
-			if (withHeavyContent) {
-				val jset = jo.getJSONArray("set")
-				val set = ArrayList<Item>(jset.length())
-				for (i in 0 until jset.length()) {
-					val jso = jset.getJSONObject(i)
-					set.add(Item().fromJsonObject(jso).withProgress(progress))
-				}
-				mSet = set
-
-				val variants = ArrayList<String>(20)
-				val jvar = jo.getJSONArray("variants")
-				for (i in 0 until jvar.length()) {
-					variants.add(jvar.getString(i))
-				}
-				mVariants = variants
-			}
-
-			mProgress = progress
-		} catch (ignored: IOException) {
-			ignored.printStackTrace()
-		} catch (ignored: JSONException) {
-			ignored.printStackTrace()
-		}
-
-		return this
-	}
-
-	inner class Problem internal constructor(lesson: Lesson, val item: Item) : Lesson.Problem(lesson) {
-		var variants: Array<String?>
-
+	abstract inner class Problem internal constructor(lesson: Lesson, val item: Item) : Lesson.Problem(lesson) {
 		override fun spied() {
 			item.fail()
 		}
@@ -246,18 +199,11 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 
 		val knowledge: Knowledge
 			get() = item.knowledge
-
-		init {
-			text = item.character
-			meaning = item.meaning
-			variants = arrayOfNulls(C.NUMBER_OF_ANSWERS)
-		}
 	}
 
-	inner class Item internal constructor() {
+
+	open inner class Item internal constructor() {
 		var id = 0
-		var character: String = ""
-		var meaning: String = ""
 
 		var knowledgeLevel = 0
 		var touchDate: Long = 0
@@ -266,10 +212,8 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		var showDate: Long = 0
 
 		@Throws(JSONException::class)
-		fun fromJsonObject(jso: JSONObject): Item {
+		open fun fromJsonObject(jso: JSONObject): Item {
 			id = jso.getInt("i")
-			character = jso.getString("c")
-			meaning = jso.getString("m")
 
 			return this
 		}

@@ -2,29 +2,42 @@
 <androidx.cardview.widget.CardView style="@style/card"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <androidx.gridlayout.widget.GridLayout
-        xmlns:grid="http://schemas.android.com/apk/res-auto"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        grid:alignmentMode="alignBounds"
-        grid:columnCount="2"
-        grid:rowOrderPreserved="false"
-        grid:useDefaultMargins="true">
-        <Button style="@style/view_interaction_answer"
-                android:id="@+id/a0" android:text="@string/john_smith" />
-        <Button style="@style/view_interaction_answer"
-                android:id="@+id/a1" android:text="@string/john_smith" />
-        <Button style="@style/view_interaction_answer"
-                android:id="@+id/a2" android:text="@string/john_smith" />
-        <Button style="@style/view_interaction_answer"
-                android:id="@+id/a3" android:text="@string/john_smith" />
-        <Button style="@style/view_interaction_answer"
-                grid:layout_columnSpan="2"
-                android:id="@+id/mistaken"
-                android:layout_height="0dp"
-                android:text="@string/i_was_mistaken"
-                android:textSize="@dimen/text_regular"
-                android:textColor="@color/color_red" />
-    </androidx.gridlayout.widget.GridLayout>
+        android:layout_height="match_parent">
+
+        <Button style="@style/view_shutter"
+            android:id="@+id/shadowing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/shadowing_hint"
+            android:background="@drawable/bg_dark_tile"/>
+
+        <androidx.gridlayout.widget.GridLayout
+            xmlns:grid="http://schemas.android.com/apk/res-auto"
+            android:id="@android:id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            grid:alignmentMode="alignBounds"
+            grid:columnCount="2"
+            grid:rowOrderPreserved="false"
+            grid:useDefaultMargins="true">
+            <Button style="@style/view_interaction_answer"
+                    android:id="@+id/a0" android:text="@string/john_smith" />
+            <Button style="@style/view_interaction_answer"
+                    android:id="@+id/a1" android:text="@string/john_smith" />
+            <Button style="@style/view_interaction_answer"
+                    android:id="@+id/a2" android:text="@string/john_smith" />
+            <Button style="@style/view_interaction_answer"
+                    android:id="@+id/a3" android:text="@string/john_smith" />
+            <Button style="@style/view_interaction_answer"
+                    grid:layout_columnSpan="2"
+                    android:id="@+id/no_idea"
+                    android:layout_height="0dp"
+                    android:text="@string/no_idea"
+                    android:textSize="@dimen/text_regular"
+                    android:textColor="@color/color_red" />
+        </androidx.gridlayout.widget.GridLayout>
+    </FrameLayout>
 
 </androidx.cardview.widget.CardView>

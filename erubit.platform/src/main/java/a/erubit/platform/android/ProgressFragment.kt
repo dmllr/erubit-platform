@@ -4,6 +4,10 @@ import a.erubit.platform.R
 import a.erubit.platform.android.LessonsFragment.OnLessonInteractionListener
 import a.erubit.platform.course.*
 import a.erubit.platform.course.CourseManager
+import a.erubit.platform.course.lesson.CharacterLesson
+import a.erubit.platform.course.lesson.Lesson
+import a.erubit.platform.course.lesson.SetLesson
+import a.erubit.platform.course.lesson.WelcomeLesson
 
 import android.content.Context
 import android.os.Bundle
@@ -139,20 +143,17 @@ class ProgressFragment : Fragment() {
 			mList = ArrayList(10)
             val ctx = context!!
 
-			for (lesson in course!!.getLessons(ctx)) {
+			for (lesson in course!!.lessons!!) {
 				mList.add(HeaderItem(lesson))
 
 				if (lesson is WelcomeLesson) {
 					mList.add(ContentItem(lesson.getProgress(ctx).getExplanation(ctx), ""))
 				}
 
-				if (lesson is BunchLesson) {
-                    // including SetLesson, VocabularyLesson, PhraseLesson and CharacterLesson
-
-                    lesson.loadHeavyContent(ctx)
-
+				if (lesson is CharacterLesson) {
+                    // including SetLesson, VocabularyLesson, PhraseLesson
 					for (item in lesson.mSet!!) {
-						mList.add(ContentItem(item.character, getKnowledgeText(item.knowledgeLevel)))
+						mList.add(ContentItem((item as CharacterLesson.Item).character, getKnowledgeText(item.knowledgeLevel)))
 					}
 				}
 			}

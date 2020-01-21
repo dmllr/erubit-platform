@@ -227,7 +227,7 @@ public class FlipLayout extends FrameLayout
             // Once we reach the midpoint in the animation, we need to hide the
             // source view and show the destination view. We also need to change
             // the angle by 180 degrees so that the destination does not come in
-            // flipped around. This is the main problem with SDK sample, it does
+            // flipped around. This is the content problem with SDK sample, it does
             // not
             // do this.
             if (interpolatedTime >= 0.5f) {

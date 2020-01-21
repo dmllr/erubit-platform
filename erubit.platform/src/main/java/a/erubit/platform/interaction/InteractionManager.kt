@@ -2,7 +2,8 @@ package a.erubit.platform.interaction
 
 import a.erubit.platform.R
 import a.erubit.platform.course.*
-import a.erubit.platform.course.Lesson.PresentableDescriptor
+import a.erubit.platform.course.lesson.*
+import a.erubit.platform.course.lesson.Lesson.PresentableDescriptor
 
 import android.content.Context
 import android.graphics.PixelFormat
@@ -18,10 +19,9 @@ import android.view.animation.Animation.AnimationListener
 import android.view.animation.TranslateAnimation
 import android.widget.BaseAdapter
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
-
-import link.fls.swipestack.SwipeHelper
-import link.fls.swipestack.SwipeStack.SwipeStackListener
+import link.fls.swipestack.SwipeStack.*
 
 import t.FlipLayout.FlipLayout
 import t.FlipLayout.FlipLayout.OnFlipListener
@@ -50,6 +50,7 @@ class InteractionManager private constructor() {
 			PixelFormat.TRANSLUCENT
 	)
 	private var mInteractionViewWelcome: View? = null
+	private var mInteractionViewFlipcardCourse: View? = null
 	private var mInteractionViewSetCourse: View? = null
 	private var mInteractionViewPhraseCourse: View? = null
 	private var mAnswerLabels: IntArray = IntArray(0)
@@ -72,12 +73,17 @@ class InteractionManager private constructor() {
 
 	private fun createInteractionViews(context: Context) {
 		mInteractionViewWelcome = createWelcomeInteractionView(context)
+		mInteractionViewFlipcardCourse = createFlipcardInteractionView(context)
 		mInteractionViewSetCourse = createChooseInteractionView(context)
 		mInteractionViewPhraseCourse = createPhraseInteractionView(context)
 	}
 
 	private fun createWelcomeInteractionView(context: Context): View {
-		return View.inflate(context, R.layout.view_welcome, null)
+		return View.inflate(context, R.layout.view_interaction_welcome, null)
+	}
+
+	private fun createFlipcardInteractionView(context: Context): View {
+		return View.inflate(context, R.layout.view_interaction_flipcard, null)
 	}
 
 	private fun createChooseInteractionView(context: Context): View {
@@ -96,7 +102,7 @@ class InteractionManager private constructor() {
 	}
 
 	fun getInteractionView(context: Context, listener: InteractionListener): View? {
-		val lesson = CourseManager.i().getNextLesson(context)
+		val lesson = CourseManager.i().getNextLesson()
 
 		return lesson?.let { getInteractionView(context, it, listener) }
 	}
@@ -112,7 +118,7 @@ class InteractionManager private constructor() {
 			ProgressManager.i().save(context, lesson)
 
 			// would take next lesson and presentable
-			pd = CourseManager.i().getNextLesson(context)?.getNextPresentable(context) ?: PresentableDescriptor.ERROR
+			pd = CourseManager.i().getNextLesson()?.getNextPresentable(context) ?: PresentableDescriptor.ERROR
 		}
 
 		if (pd.mStatus === Lesson.Status.OK) {
@@ -146,6 +152,7 @@ class InteractionManager private constructor() {
 
 		view = when (lessonType) {
 			WelcomeLesson::class.java.toString() -> populateWelcome(context, lesson, pd.mPresentable as String, listener)
+			FlipcardLesson::class.java.toString() -> populateFlipcardLesson(context, lesson, pd.mPresentable as Lesson.Problem, listener)
 			SetLesson::class.java.toString() -> populateSetLesson(context, lesson, pd.mPresentable as Lesson.Problem, listener)
 			PhraseLesson::class.java.toString() -> populatePhraseLesson(context, lesson, pd.mPresentable as Lesson.Problem, listener)
 			CharacterLesson::class.java.toString() -> populatePhraseLesson(context, lesson, pd.mPresentable as Lesson.Problem, listener)
@@ -177,24 +184,63 @@ class InteractionManager private constructor() {
 		return view
 	}
 
+	private fun populateFlipcardLesson(context: Context, lesson: Lesson, problem: Lesson.Problem, listener: InteractionListener): View {
+		val view = mInteractionViewFlipcardCourse!!
+		val prob = problem as FlipcardLesson.Problem
+
+		val fv = view.findViewById<LinearLayout>(R.id.face)
+		fv.findViewById<TextView>(R.id.content).text = prob.flipcard.face.content
+		fv.findViewById<TextView>(R.id.helper).text = prob.flipcard.face.helper
+		fv.findViewById<TextView>(R.id.side).text = prob.flipcard.face.side
+		val fva = fv.findViewById<LinearLayout>(R.id.additions)
+		fva.removeAllViews()
+		for (a in prob.flipcard.face.additions) {
+			val tv = TextView(context)
+			tv.text = a
+			tv.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+			fva.addView(tv)
+		}
+
+		view.findViewById<TextView>(R.id.back).text = prob.flipcard.back.content
+
+		view.findViewById<View>(R.id.familiar).setOnClickListener {
+			prob.attempt(true)
+			prob.treatResult()
+			lesson.mProgress!!.trainDate = System.currentTimeMillis()
+
+			ProgressManager.i().save(context, lesson)
+
+			onInteraction(listener, InteractionEvent.POSITIVE)
+		}
+		view.findViewById<View>(R.id.no_idea).setOnClickListener {
+			prob.attempt(false)
+			onInteraction(listener, InteractionEvent.NEGATIVE)
+		}
+
+		setupQuickButtons(context, view, lesson, listener)
+
+		return view
+	}
+
 	private fun populateSetLesson(context: Context, lesson: Lesson, problem: Lesson.Problem, listener: InteractionListener): View {
 		val view = mInteractionViewSetCourse!!
 		val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+		val prob = problem as CharacterLesson.Problem
 
-		populateCard(view, problem)
+		populateCard(view, prob)
 
 		val answerTouchListener = View.OnClickListener { v: View ->
 			lesson.mProgress!!.interactionDate = System.currentTimeMillis()
 
 			val answer = (v as TextView).text.toString()
-			val solved = U.equals(problem.meaning, answer)
+			val solved = prob.isSolved(answer)
 
-			problem.attempt(solved)
+			prob.attempt(solved)
 
 			if (solved) {
 				lesson.mProgress!!.trainDate = System.currentTimeMillis()
 
-				problem.treatResult()
+				prob.treatResult()
 				ProgressManager.i().save(context, lesson)
 
 				onInteraction(listener, InteractionEvent.POSITIVE)
@@ -211,23 +257,29 @@ class InteractionManager private constructor() {
 
 		for (i in mAnswerLabels.indices) {
 			val tv = viewVariants.findViewById<Button>(mAnswerLabels[i])
-			tv.text = (problem as BunchLesson.Problem?)!!.variants[i]
+			tv.text = prob.variants[i]
 			tv.setOnClickListener(answerTouchListener)
 		}
 
-		viewVariants.findViewById<View>(R.id.mistaken).setOnClickListener {
+		viewVariants.findViewById<View>(R.id.no_idea).setOnClickListener {
 			lesson.mProgress!!.interactionDate = System.currentTimeMillis()
-			problem.attempt(false)
+			prob.attempt(false)
 			swipeStack.swipeTopViewToLeft()
+		}
+		val shadowing : View = viewVariants.findViewById<View>(R.id.shadowing)
+		val shadowingEnabled: Boolean = TinyDB(context).getBoolean(C.SP_ENABLED_SHADOWING, true)
+		shadowing.visibility = if (shadowingEnabled) View.VISIBLE else View.GONE
+		shadowing.setOnClickListener {
+			it.visibility = View.GONE
 		}
 
 		val viewMeaning = inflater.inflate(R.layout.view_card_explaination, swipeStack, false)
-		(viewMeaning.findViewById<View>(R.id.meaning) as TextView).text = problem.meaning
+		(viewMeaning.findViewById<View>(R.id.meaning) as TextView).text = prob.meaning
 
-		val problemKnowledge = (problem as BunchLesson.Problem).knowledge
+		val problemKnowledge = (prob as BunchLesson.Problem).knowledge
 		swipeStack.adapter = when(problemKnowledge) {
 			BunchLesson.Knowledge.Untouched -> SetLessonWelcomeStackAdapter(viewMeaning)
-			else -> SetLessonFullStackAdapter(context, viewVariants, viewMeaning)
+			else -> SetLessonFullStackAdapter(viewVariants, viewMeaning)
 		}
 
 		swipeStack.setListener(object : SwipeStackListener {
@@ -237,34 +289,19 @@ class InteractionManager private constructor() {
 					progress.trainDate = System.currentTimeMillis()
 					progress.interactionDate = progress.trainDate
 
-					problem.attempt(true)
-					problem.treatResult()
+					prob.attempt(true)
+					prob.treatResult()
 
 					ProgressManager.i().save(context, lesson)
 
 					return
-				}
-				when (position) {
-					0 -> {
-						lesson.mProgress!!.interactionDate = System.currentTimeMillis()
-
-						problem.attempt(false)
-						problem.treatResult()
-
-						ProgressManager.i().save(context, lesson)
-
-						val v = swipeStack.adapter.getView(1, null, null)
-						val sh = SwipeHelper(swipeStack)
-						sh.registerObservedView(v, 0f, 0f)
-						sh.swipeViewToLeft()
-					}
 				}
 			}
 
 			override fun onViewSwipedToRight(position: Int) {}
 
 			override fun onStackEmpty() {
-				problem.treatResult()
+				prob.treatResult()
 				ProgressManager.i().save(context, lesson)
 				onInteraction(listener, InteractionEvent.POSITIVE)
 			}
@@ -282,14 +319,15 @@ class InteractionManager private constructor() {
 	private fun populateVocabularyLesson(context: Context, lesson: Lesson, problem: Lesson.Problem, listener: InteractionListener): View {
 		val view = mInteractionViewSetCourse!!
 		val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+		val prob = problem as CharacterLesson.Problem
 
-		populateCard(view, problem)
+		populateCard(view, prob)
 
 		val swipeStack: SwipeStack = view.findViewById(R.id.swipeStack)
 		val viewMeaning = inflater.inflate(R.layout.view_card_explaination, swipeStack, false)
 		val textMeaning = viewMeaning.findViewById<TextView>(R.id.meaning)
 
-		textMeaning.text = problem.meaning
+		textMeaning.text = prob.meaning
 
 		swipeStack.adapter = SetLessonWelcomeStackAdapter(viewMeaning)
 		swipeStack.setListener(object : SwipeStackListener {
@@ -298,8 +336,8 @@ class InteractionManager private constructor() {
 				progress.trainDate = System.currentTimeMillis()
 				progress.interactionDate = progress.trainDate
 
-				problem.attempt(true)
-				problem.treatResult()
+				prob.attempt(true)
+				prob.treatResult()
 
 				ProgressManager.i().save(context, lesson)
 			}
@@ -313,7 +351,7 @@ class InteractionManager private constructor() {
 			}
 
 			override fun onStackEmpty() {
-				problem.treatResult()
+				prob.treatResult()
 
 				ProgressManager.i().save(context, lesson)
 
@@ -332,8 +370,9 @@ class InteractionManager private constructor() {
 
 	private fun populatePhraseLesson(context: Context, lesson: Lesson, problem: Lesson.Problem, listener: InteractionListener): View {
 		val view = mInteractionViewPhraseCourse!!
+		val prob = problem as CharacterLesson.Problem
 
-		populateCard(view, problem)
+		populateCard(view, prob)
 
 		val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -345,7 +384,7 @@ class InteractionManager private constructor() {
 		while (fllVariants.childCount > 1)
 			fllVariants.removeViewAt(0)
 
-		for (variant in (problem as BunchLesson.Problem).variants) {
+		for (variant in prob.variants) {
 			val tpi = inflater.inflate(R.layout.text_phrase_item, fllVariants, false)
 			tpi.setOnClickListener { v: View -> animateMoveWord(view, v) }
 
@@ -373,14 +412,14 @@ class InteractionManager private constructor() {
 
 			var solved = false
 			if (lesson is PhraseLesson)
-				solved = U.equals(problem.meaning, answer.toString())
+				solved = U.equals(prob.meaning, answer.toString())
 			if (lesson is CharacterLesson)
-				solved = U.equalsIndependent(problem.meaning, answer.toString())
+				solved = U.equalsIndependent(prob.meaning, answer.toString())
 
-			problem.attempt(solved)
+			prob.attempt(solved)
 
 			if (solved) {
-				problem.treatResult()
+				prob.treatResult()
 				ProgressManager.i().save(context, lesson)
 				onInteraction(listener, InteractionEvent.POSITIVE)
 			} else {
@@ -394,7 +433,7 @@ class InteractionManager private constructor() {
 		return view
 	}
 
-	private fun populateCard(view: View, problem: Lesson.Problem) {
+	private fun populateCard(view: View, problem: CharacterLesson.Problem) {
 		val card: FlipLayout = view.findViewById(R.id.card)
 		card.reset()
 		card.setOnFlipListener(object : OnFlipListener {
@@ -479,14 +518,12 @@ class InteractionManager private constructor() {
 	}
 
 
-	private class SetLessonFullStackAdapter internal constructor(context: Context, viewVariants: View, viewExplanation: View) : BaseAdapter() {
-		private val shadowingEnabled: Boolean
-		private val mViewDoYouKnow: View
-		private val mViewVariants: View
-		private val mViewExplanation: View
+	private class SetLessonFullStackAdapter internal constructor(viewVariants: View, viewExplanation: View) : BaseAdapter() {
+		private val mViewVariants: View = viewVariants
+		private val mViewExplanation: View = viewExplanation
 
 		override fun getCount(): Int {
-			return if (shadowingEnabled) 3 else 2
+			return 2
 		}
 
 		override fun getItem(position: Int): Any {
@@ -498,21 +535,11 @@ class InteractionManager private constructor() {
 		}
 
 		override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
-			return when (position + if (shadowingEnabled) 0 else 1) {
-				0 -> mViewDoYouKnow
-				1 -> mViewVariants
-				2 -> mViewExplanation
+			return when (position) {
+				0 -> mViewVariants
+				1 -> mViewExplanation
 				else -> throw UnsupportedOperationException("In SetLessonFullStackAdapter.getView position has a wrong value `$position`")
 			}
-		}
-
-		init {
-			val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-			shadowingEnabled = TinyDB(context).getBoolean(C.SP_ENABLED_SHADOWING, true)
-			mViewDoYouKnow = inflater.inflate(R.layout.view_card_know_dont_know, viewVariants.parent as ViewGroup?, false)
-			mViewVariants = viewVariants
-			mViewExplanation = viewExplanation
 		}
 	}
 

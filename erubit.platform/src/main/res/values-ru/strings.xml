@@ -6,11 +6,10 @@
     <string name="understood">Понятно</string>
     <string name="camera">Камера</string>
     <string name="not_now">⨯ Закрыть</string>
-    <string name="do_you_know_the_answer">Знаете ответ?</string>
-    <string name="swipe_left">СВАЙП ВЛЕВО</string>
-    <string name="swipe_right">СВАЙП ВПРАВО</string>
+    <string name="shadowing_hint">Варианты ответов скрыты, чтобы заставить вашу память действительно работать.\n\n\n\nНАЖМИТЕ ЧТОБЫ ПОКАЗАТЬ ВАРИАНТЫ</string>
     <string name="swipe_to_dismiss">СДВИНЬТЕ В СТОРОНУ</string>
-    <string name="i_was_mistaken">Я ОШИБСЯ</string>
+    <string name="no_idea">НЕ ЗНАЮ</string>
+    <string name="im_fine">ЗНАКОМО</string>
 
     <string name="disable_for">Запрет на</string>
     <string name="_1h">1ч</string>

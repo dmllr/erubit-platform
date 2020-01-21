@@ -9,7 +9,7 @@ import a.erubit.platform.android.TrainingFragment.OnTrainingInteractionListener
 import a.erubit.platform.android.TrainingFragment.TrainingInteractionAction
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
-import a.erubit.platform.course.Lesson
+import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.interaction.AnalyticsManager
 import android.content.DialogInterface
 import android.content.Intent
@@ -79,11 +79,11 @@ class NavActivity :
 		supportFragmentManager.addOnBackStackChangedListener {
 			if (supportFragmentManager.backStackEntryCount > 0) { // show back button
 				supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-				toolbar.setNavigationOnClickListener { v: View? -> onBackPressed() }
+				toolbar.setNavigationOnClickListener { onBackPressed() }
 			} else { //show hamburger
 				supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 				toggle.syncState()
-				toolbar.setNavigationOnClickListener { v: View? -> drawer.openDrawer(GravityCompat.START) }
+				toolbar.setNavigationOnClickListener { drawer.openDrawer(GravityCompat.START) }
 			}
 		}
 
@@ -239,7 +239,7 @@ class NavActivity :
 			}
 			CourseInteractionAction.SHOW_INFO -> showCourseInfo(course)
 			CourseInteractionAction.PRACTICE -> {
-				val lesson = CourseManager.i().getNextLesson(this, course)
+				val lesson = CourseManager.i().getNextLesson(course)
 				fragment = if (lesson == null) LessonsFragment() else CourseTrainingFragment()
 				fragment.arguments = bundle
 				putFragment(fragment)

@@ -3,6 +3,7 @@
     <color name="colorTextPrimary">#FFFFFF</color>
     <color name="colorTextPrimaryDark">#282828</color>
     <color name="colorTextOnCard">#c000</color>
+    <color name="colorShadowing">#d000</color>
     <color name="color_bg_light">#eceff1</color>
     <color name="color_bg_dark">#2e3032</color>
 
