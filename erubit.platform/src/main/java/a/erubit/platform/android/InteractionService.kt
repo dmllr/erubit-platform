@@ -80,7 +80,7 @@ class InteractionService : Service(), InteractionListener {
 
 		val notificationBuilder = NotificationCompat.Builder(this, channel)
 		val builder = notificationBuilder.setOngoing(true)
-				//.setSmallIcon(R.mipmap.ic_launcher)
+				.setSmallIcon(R.drawable.ic_learning)
 				.setPriority(PRIORITY_MIN)
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 			builder.setCategory(Notification.CATEGORY_SERVICE)
