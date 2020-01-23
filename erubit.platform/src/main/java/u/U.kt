@@ -104,7 +104,7 @@ object U {
 	}
 
 	@Throws(JSONException::class)
-	fun getStringValue(context: Context, jo: JSONObject, property: String?): String {
+	fun getStringValue(context: Context, jo: JSONObject, property: String): String {
 		var value = ""
 
 		if (jo.has(property)) {
