@@ -15,19 +15,19 @@ import java.util.*
 class CourseManager private constructor() {
 	val courses = ArrayList<Course>()
 	private var mActiveCourses = ArrayList<Course>()
+	var lessonInflaters: LinkedHashMap<String, Lesson.Inflater> = LinkedHashMap(0)
 
-	fun initialize(context: Context) {
+	fun initialize(context: Context, contentsResourceId: Int) {
 		val packageName = context.packageName
-		var resourceId = context.resources.getIdentifier("_contents", "raw", packageName)
-		if (resourceId != 0) {
+		if (contentsResourceId != 0) {
 			try {
-				val json = U.loadStringResource(context, resourceId)
+				val json = U.loadStringResource(context, contentsResourceId)
 				val ja = JSONArray(json)
 				for (i in 0 until ja.length()) {
 					val jo = ja.getJSONObject(i)
-					resourceId = context.resources.getIdentifier(jo.getString("name"), "raw", packageName)
+					val rid = context.resources.getIdentifier(jo.getString("name"), "raw", packageName)
 
-					val c = fromResourceId(context, resourceId)
+					val c = fromResourceId(context, rid)
 					c.defaultActive = jo.getBoolean("active")
 					courses.add(c)
 				}
@@ -47,11 +47,8 @@ class CourseManager private constructor() {
 		updateActivity(context)
 	}
 
-	private fun fromResourceId(context: Context, resourceId: Int): LanguageCourse {
-		val c = LanguageCourse()
-		c.loadFromResource(context, resourceId)
-
-		return c
+	private fun fromResourceId(context: Context, resourceId: Int): Course {
+		return Course().loadFromResource(context, resourceId)
 	}
 
 	fun getCourse(id: String?): Course? {
@@ -122,13 +119,11 @@ class CourseManager private constructor() {
 	}
 
 	fun getNextLesson(course: Course): Lesson? {
-		val lessons = course.lessons!!
-		val size = lessons.size
+		val size = course.lessons.size
 		if (size < 1)
 			return null
 
-		for (k in 0 until size) {
-			val l = lessons[k]
+		for (l in course.lessons.values) {
 			if (l.hasInteraction())
 				return l
 		}
@@ -158,6 +153,11 @@ class CourseManager private constructor() {
 
 		return r.toString()
 	}
+
+	fun registerInflater(type: String, lessonInflater: Lesson.Inflater) {
+		lessonInflaters[type] = lessonInflater
+	}
+
 
 	companion object {
 		private val courseManager = CourseManager()

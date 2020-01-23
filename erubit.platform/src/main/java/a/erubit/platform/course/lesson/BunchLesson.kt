@@ -9,12 +9,11 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONException
 import org.json.JSONObject
-import u.C
 import java.util.*
 import kotlin.math.max
 
 
-abstract class BunchLesson internal constructor(course: Course) : Lesson(course) {
+abstract class BunchLesson(course: Course) : Lesson(course) {
 	private val timeToForget = 1000 * 60 * 60 * 24 * 2 // Two days
 
 	open var mSet: ArrayList<Item>? = null
@@ -74,6 +73,7 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 
 		for (item in set) {
 			val descriptor = getPresentable(item)
+			descriptor.title = item.title
 			descriptors.add(descriptor)
 		}
 
@@ -184,10 +184,19 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 		return progress.nextInteractionDate >= 0 && progress.nextInteractionDate <= System.currentTimeMillis()
 	}
 
-	abstract fun fromJson(context: Context, jo: JSONObject): BunchLesson
+	fun getKnowledgeText(context: Context, knowledgeLevel: Int): String {
+		return when {
+			knowledgeLevel in 1 until rankFamiliar -> context.getString(R.string.studying)
+			knowledgeLevel in rankFamiliar until rankLearned -> context.getString(R.string.familiar)
+			knowledgeLevel in rankLearned until rankLearnedWell -> context.getString(R.string.learned)
+			knowledgeLevel >= rankLearnedWell -> context.getString(R.string.learned_well)
+			else -> context.getString(R.string.unknown)
+		}
+	}
 
 
-	abstract inner class Problem internal constructor(lesson: Lesson, val item: Item) : Lesson.Problem(lesson) {
+
+	abstract inner class Problem(lesson: Lesson, val item: Item) : Lesson.Problem(lesson) {
 		override fun spied() {
 			item.fail()
 		}
@@ -202,8 +211,9 @@ abstract class BunchLesson internal constructor(course: Course) : Lesson(course)
 	}
 
 
-	open inner class Item internal constructor() {
+	open inner class Item() {
 		var id = 0
+		var title = ""
 
 		var knowledgeLevel = 0
 		var touchDate: Long = 0

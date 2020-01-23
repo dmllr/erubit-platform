@@ -7,6 +7,7 @@
     "<p>It's made for demo purposes only.</p>"
   ],
   "lessons": [
+    "@ref demo_welcome",
     {
       "id": "A",
       "title": "Flipcard",
@@ -16,19 +17,34 @@
           "i": 0,
           "face": {
             "content": "語",
-            "helper": "<b>kun</b>:\nかた.る\nかた.らう\n<b>on</b>:\nゴ",
+            "helper": "<b>kun</b>\nかた.る\nかた.らう\n<b>on</b>\nゴ",
             "side": "{語:ご}\n{語:かた}り\n{語:ご}{源:げん}\n{語:ご}{彙:い}\n{語:かた}\n{語:ご}{学:がく}\n{語:ご}{句:く}",
             "add": [
+              "word, speech, language",
               "Parts: 口 五 言"
             ]
           },
           "back": {
-            "content": "On reading compounds\n語 【ゴ】 language, word\n語学 【ゴガク】 study of foreign languages, linguistics\n標語 【ヒョウゴ】 motto, slogan, catchword\n造語 【ゾウゴ】 coined word, coinage, neologism\n\nKun reading compounds\n語る 【かたる】 to talk about, to speak of, to tell, to narrate, to recite, to chant, to indicate, to show\n語るに落ちる 【かたるにおちる】 to let slip a secret, to let the cat out of the bag\n語らう 【かたらう】 to talk, to tell, to recite, to pledge, to conspire with"
+            "content": "<b>On reading compounds</b>\n語 【ゴ】 language, word\n語学 【ゴガク】 study of foreign languages, linguistics\n標語 【ヒョウゴ】 motto, slogan, catchword\n造語 【ゾウゴ】 coined word, coinage, neologism\n\n<b>Kun reading compounds</b>\n語る 【かたる】 to talk about, to speak of, to tell, to narrate, to recite, to chant, to indicate, to show\n語るに落ちる 【かたるにおちる】 to let slip a secret, to let the cat out of the bag\n語らう 【かたらう】 to talk, to tell, to recite, to pledge, to conspire with"
+          }
+        },
+        {
+          "i": 1,
+          "face": {
+            "content": "歯",
+            "helper": "<b>kun</b>\nよわい\nは\nよわ.い\nよわい.する\n<b>on</b>\nシ",
+            "side": "{歯:は}\n{歯:は}{磨:みが}き\n{歯:は}{車:ぐるま}\n{歯:は}{医:い}{者:しゃ}\n{歯:し}{科:か}{医:い}\n{歯:し}{垢:こう}",
+            "add": [
+              "tooth, cog",
+              "Parts: 凵 止 米 歯"
+            ]
+          },
+          "back": {
+            "content": "<b>On reading compounds</b>\n歯科医 【シカイ】 dentist\n歯科 【シカ】 dentistry\n義歯 【ギシ】 artificial tooth\n生歯 【セイシ】 teething, cutting teeth, dentition\n\n<b>Kun reading compounds</b>\n齢 【よわい】 (one's) age\n歯 【は】 tooth\n歯切れ 【はぎれ】 feel when biting, manner of enunciation\n継ぎ歯 【つぎば】 capped tooth, (dental) crown\n年端 【としは】 age, years (old)\n齢 【よわい】 (one's) age"
           }
         }
       ]
     },
-    "@ref demo_welcome",
     {
       "id": "471fc60e13024b6c85db5cb25f511569",
       "title": "Japanese greetings",

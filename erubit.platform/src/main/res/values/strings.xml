@@ -9,7 +9,6 @@
 
     <string name="grant_permission_bar">Micro learning mode requires a drawing over other apps permission. Tap here to grant it.</string>
     <string name="grant_permission_dialog">Micro learning mode requires a drawing over other apps permission. Without permission, only traditional learning will be available.\n\nPlease tap OK now and then permit drawing over other apps on next screen.</string>
-    <string name="next_time_notice"><![CDATA[<p>Now, please touch the \"Understood\" button below.</p>]]></string>
     <string name="understood">Understood</string>
     <string name="camera">Camera</string>
     <string name="not_now">⨯ Close</string>

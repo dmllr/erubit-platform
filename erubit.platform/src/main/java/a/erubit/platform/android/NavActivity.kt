@@ -39,7 +39,7 @@ import u.C
 import u.U
 
 
-class NavActivity :
+open class NavActivity :
 	AppCompatActivity(),
 	OnCourseInteractionListener,
 	OnLessonInteractionListener,

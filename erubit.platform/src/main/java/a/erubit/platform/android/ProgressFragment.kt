@@ -4,10 +4,8 @@ import a.erubit.platform.R
 import a.erubit.platform.android.LessonsFragment.OnLessonInteractionListener
 import a.erubit.platform.course.*
 import a.erubit.platform.course.CourseManager
-import a.erubit.platform.course.lesson.CharacterLesson
+import a.erubit.platform.course.lesson.BunchLesson
 import a.erubit.platform.course.lesson.Lesson
-import a.erubit.platform.course.lesson.SetLesson
-import a.erubit.platform.course.lesson.WelcomeLesson
 
 import android.content.Context
 import android.os.Bundle
@@ -55,16 +53,6 @@ class ProgressFragment : Fragment() {
 
 	private inner class ProgressListAdapter internal constructor(course: Course?) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 		private val mList: MutableList<ListItem>
-
-		private fun getKnowledgeText(knowledgeLevel: Int): String {
-			return when {
-				knowledgeLevel > 0 && knowledgeLevel < SetLesson.RANK_FAMILIAR -> getString(R.string.studying)
-				knowledgeLevel >= SetLesson.RANK_FAMILIAR && knowledgeLevel < SetLesson.RANK_LEARNED -> getString(R.string.familiar)
-				knowledgeLevel >= SetLesson.RANK_LEARNED && knowledgeLevel < SetLesson.RANK_LEARNED_WELL -> getString(R.string.learned)
-				knowledgeLevel >= SetLesson.RANK_LEARNED_WELL -> getString(R.string.learned_well)
-				else -> getString(R.string.unknown)
-			}
-		}
 
 		override fun getItemViewType(position: Int): Int {
 			return mList[position].type
@@ -143,18 +131,14 @@ class ProgressFragment : Fragment() {
 			mList = ArrayList(10)
             val ctx = context!!
 
-			for (lesson in course!!.lessons!!) {
+			for (lesson in course!!.lessons.values) {
 				mList.add(HeaderItem(lesson))
 
-				if (lesson is WelcomeLesson) {
+				if (lesson is BunchLesson) {
+					for (item in lesson.mSet!!)
+						mList.add(ContentItem(item.title, lesson.getKnowledgeText(ctx, item.knowledgeLevel)))
+				} else {
 					mList.add(ContentItem(lesson.getProgress(ctx).getExplanation(ctx), ""))
-				}
-
-				if (lesson is CharacterLesson) {
-                    // including SetLesson, VocabularyLesson, PhraseLesson
-					for (item in lesson.mSet!!) {
-						mList.add(ContentItem((item as CharacterLesson.Item).character, getKnowledgeText(item.knowledgeLevel)))
-					}
 				}
 			}
 		}

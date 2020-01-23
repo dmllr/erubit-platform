@@ -2,7 +2,6 @@
 <resources>
     <string name="grant_permission_bar">Режим микрообучения требует разрешения вывода поверх других окон. Нажмите сюда, чтобы выдать разрешение.</string>
     <string name="grant_permission_dialog">Режим микрообучения требует разрешения вывода поверх других окон. Без этого разрешения только традиционное обучение будет доступно.\n\nПожалуйста нажмите ОК чтобы перейти к настройкам разрешений.</string>
-    <string name="next_time_notice"><![CDATA[<p>Пожалуйста нажмите кнопку "Понятно" ниже.</p>]]></string>
     <string name="understood">Понятно</string>
     <string name="camera">Камера</string>
     <string name="not_now">⨯ Закрыть</string>

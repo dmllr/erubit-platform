@@ -1,6 +1,7 @@
-package a.erubit.platform.course.lesson
+package a.erubit.platform.learning.lesson
 
 import a.erubit.platform.course.Course
+import a.erubit.platform.course.lesson.BunchLesson
 
 
 class VocabularyLesson internal constructor(course: Course) : CharacterLesson(course) {

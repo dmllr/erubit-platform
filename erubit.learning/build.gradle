@@ -1,35 +1,32 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
-
-
+apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
 
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        buildToolsVersion "29.0.2"
+        versionCode 1
+        versionName "1.0"
 
-        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -42,6 +39,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
 
+    implementation project(':erubit.platform')
+
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.nex3z:flow-layout:0.1.2'
     implementation 'oss.dmllr:swipestack:0.3.4'
@@ -49,8 +48,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-}
-
-repositories {
-    mavenCentral()
 }

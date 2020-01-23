@@ -14,8 +14,8 @@ import kotlin.math.roundToInt
 
 
 class FuriganaViewMultiline : AutoResizeTextView {
-	private var mLines: Vector<Line> = Vector(0)
-	private var mAllTexts: Vector<PairText> = Vector(0)
+	private val mLines: Vector<Line> = Vector(0)
+	private val mAllTexts: Vector<PairText> = Vector(0)
 
 	private lateinit var mNormalTextPaint: TextPaint
 	private lateinit var mFuriganaTextPaint: TextPaint
@@ -41,7 +41,11 @@ class FuriganaViewMultiline : AutoResizeTextView {
 
 	override fun setText(text: CharSequence, type: BufferType) {
 		super.setText(text, type)
-		initialize()
+
+		if (text.isNotEmpty()) {
+			setJText()
+			onMeasure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+		}
 	}
 
 	private fun initialize() {
@@ -74,6 +78,8 @@ class FuriganaViewMultiline : AutoResizeTextView {
 	}
 
 	override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
 		val widthMode = MeasureSpec.getMode(widthMeasureSpec)
 		val heightMode = MeasureSpec.getMode(heightMeasureSpec)
 		val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -100,7 +106,7 @@ class FuriganaViewMultiline : AutoResizeTextView {
 		mLines.clear()
 		mMaxLineWidth = 0f
 
-		if (width < 0) {
+		if (width <= 0) {
 			val line = Line()
 			line.mPairTexts = mAllTexts
 			for (t in mAllTexts)
@@ -217,7 +223,7 @@ class FuriganaViewMultiline : AutoResizeTextView {
 		if (t.isEmpty())
 			return
 
-		mLines.clear()
+		mAllTexts.clear()
 		parseBoldText(t.replace(BREAK_REGEX.toRegex(), BREAK_CHARACTER))
 	}
 
