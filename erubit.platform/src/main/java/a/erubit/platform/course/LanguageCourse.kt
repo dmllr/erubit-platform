@@ -8,6 +8,7 @@ import u.C
 import u.U
 import java.io.IOException
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 
 class LanguageCourse : Course() {
@@ -36,7 +37,7 @@ class LanguageCourse : Course() {
 			if (jo.has("lessons")) {
 				val jd = jo.getJSONArray("lessons")
 				val size = jd.length()
-				val ls = ArrayList<Lesson>(size)
+				val ls = LinkedHashMap<String, Lesson>(size)
 				val error = UnsupportedOperationException("`LanguageCourse.loadFromString` cant determine lesson format.")
 				for (k in 0 until size) {
 					val ljo = when {
@@ -51,8 +52,9 @@ class LanguageCourse : Course() {
 						}
 						else -> throw error
 					}
+					val id = ljo.getString("id")
 					val lessonType = ljo.getString("type")
-					ls.add(when (lessonType) {
+					ls[id] = when (lessonType) {
 						"Welcome" -> WelcomeLesson(this).fromJson(context, ljo)
 						"Flipcard" -> FlipcardLesson(this).fromJson(context, ljo)
 						"Set" -> SetLesson(this).fromJson(context, ljo)
@@ -60,7 +62,7 @@ class LanguageCourse : Course() {
 						"Character" -> CharacterLesson(this).fromJson(context, ljo)
 						"Vocabulary" -> VocabularyLesson(this).fromJson(context, ljo)
 						else -> throw UnsupportedOperationException("Lesson type '$lessonType' is not supported yet.")
-					})
+					}
 				}
 				lessons = ls
 			}

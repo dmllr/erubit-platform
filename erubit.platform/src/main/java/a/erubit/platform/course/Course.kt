@@ -9,17 +9,11 @@ abstract class Course {
 	var name: String? = null
 	var description: String? = null
 	var defaultActive = false
-	var lessons: ArrayList<Lesson>? = null
+	var lessons: Map<String, Lesson> = LinkedHashMap(0)
 
 	abstract val progress: Progress?
 
 	fun getLesson(id: String): Lesson? {
-		lessons ?: return null
-
-		for (lesson in lessons!!)
-			if (id == lesson.id)
-				return lesson
-
-		return null
+		return lessons[id]
 	}
 }

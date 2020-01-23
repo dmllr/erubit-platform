@@ -119,13 +119,11 @@ class CourseManager private constructor() {
 	}
 
 	fun getNextLesson(course: Course): Lesson? {
-		val lessons = course.lessons!!
-		val size = lessons.size
+		val size = course.lessons.size
 		if (size < 1)
 			return null
 
-		for (k in 0 until size) {
-			val l = lessons[k]
+		for (l in course.lessons.values) {
 			if (l.hasInteraction())
 				return l
 		}

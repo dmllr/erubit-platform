@@ -143,7 +143,7 @@ class ProgressFragment : Fragment() {
 			mList = ArrayList(10)
             val ctx = context!!
 
-			for (lesson in course!!.lessons!!) {
+			for (lesson in course!!.lessons.values) {
 				mList.add(HeaderItem(lesson))
 
 				if (lesson is WelcomeLesson) {
