@@ -100,7 +100,7 @@ object U {
 		Arrays.sort(w1)
 		Arrays.sort(w2)
 
-		return Arrays.equals(w1, w2)
+		return w1.contentEquals(w2)
 	}
 
 	@Throws(JSONException::class)
