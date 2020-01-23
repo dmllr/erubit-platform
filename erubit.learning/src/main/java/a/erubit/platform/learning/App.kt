@@ -100,7 +100,8 @@ abstract class App : a.erubit.platform.android.App() {
 					}
 					view.findViewById<View>(R.id.no_idea).setOnClickListener {
 						prob.attempt(false)
-						listener.onInteraction(InteractionManager.InteractionEvent.NEGATIVE)
+
+						listener.onInteraction(InteractionManager.InteractionEvent.CLOSE)
 					}
 
 					InteractionManager.i().setupQuickButtons(context, view, lesson, listener)
