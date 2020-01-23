@@ -102,11 +102,4 @@ class FlipcardLesson internal constructor(course: Course) : BunchLesson(course) 
         }
     }
 
-
-//	private inner class Progress : a.erubit.platform.course.Progress() {
-//		override fun getExplanation(context: Context): String {
-//			val r = context.resources
-//			return r.getString(if (interactionDate == 0L) R.string.unopened else R.string.finished)
-//		}
-//	}
 }
