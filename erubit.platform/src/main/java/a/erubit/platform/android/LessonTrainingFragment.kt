@@ -14,8 +14,6 @@ class LessonTrainingFragment : TrainingFragment() {
 	private var mPresentableIndex = 0
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-
 		arguments ?: return
 		val id = arguments!!.getString("id") ?: return
 		val course = CourseManager.i().getCourse(id) ?: return
@@ -23,6 +21,8 @@ class LessonTrainingFragment : TrainingFragment() {
 
 		mLesson = course.getLesson(lessonId)
 		mPresentableIndex = -1
+
+		super.onViewCreated(view, savedInstanceState)
 	}
 
 	override val nextInteractionView: View?
