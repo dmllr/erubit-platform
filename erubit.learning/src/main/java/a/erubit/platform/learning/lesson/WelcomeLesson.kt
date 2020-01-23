@@ -1,8 +1,9 @@
-package a.erubit.platform.course.lesson
+package a.erubit.platform.learning.lesson
 
-import a.erubit.platform.R
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.ProgressManager
+import a.erubit.platform.course.lesson.Lesson
+import a.erubit.platform.learning.R
 import android.content.Context
 import com.google.gson.JsonParser
 import org.json.JSONException
@@ -16,7 +17,7 @@ class WelcomeLesson internal constructor(course: Course) : Lesson(course) {
 	private var welcomeText: String? = null
 
 	override fun getNextPresentable(context: Context): PresentableDescriptor {
-		val text = welcomeText + context.getString(R.string.next_time_notice)
+		val text = welcomeText
 		return PresentableDescriptor(text)
 	}
 
@@ -63,7 +64,7 @@ class WelcomeLesson internal constructor(course: Course) : Lesson(course) {
 		return mProgress!!.interactionDate == 0L
 	}
 
-	fun fromJson(context: Context, jo: JSONObject): WelcomeLesson {
+	override fun fromJson(context: Context, jo: JSONObject): WelcomeLesson {
 		try {
 			id = jo.getString("id")
 			name = U.getStringValue(context, jo, "title")

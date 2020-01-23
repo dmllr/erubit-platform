@@ -1,6 +1,7 @@
 package a.erubit.platform.android
 
 import a.erubit.platform.course.CourseManager
+import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.interaction.AnalyticsManager
 import a.erubit.platform.interaction.InteractionManager
 import android.app.Application
@@ -8,14 +9,32 @@ import android.content.Intent
 import android.content.IntentFilter
 
 
-class App : Application() {
+abstract class App : Application() {
 	override fun onCreate() {
 		super.onCreate()
-		CourseManager.i().initialize(applicationContext)
-		InteractionManager.i().initialize(applicationContext)
-		AnalyticsManager.i().initialize(applicationContext)
+
 		applicationContext.registerReceiver(
 				UserPresentBroadcastReceiver(),
 				IntentFilter(Intent.ACTION_USER_PRESENT))
 	}
+
+	fun initialize(i: Initializer) {
+		i.registerLessons()
+		CourseManager.i().initialize(applicationContext, i.resolveContentsResource())
+		InteractionManager.i().initialize(applicationContext)
+		AnalyticsManager.i().initialize(applicationContext)
+	}
+
+
+	abstract inner class Initializer {
+		abstract fun resolveContentsResource(): Int
+
+		open fun registerLessons() { }
+
+		protected fun registerInflater(type: String, lessonInflater: Lesson.Inflater) {
+			CourseManager.i().registerInflater(type, lessonInflater)
+			InteractionManager.i().registerInflater(type, lessonInflater)
+		}
+	}
+
 }

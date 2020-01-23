@@ -1,6 +1,8 @@
-package a.erubit.platform.course.lesson
+package a.erubit.platform.learning.lesson
 
 import a.erubit.platform.course.Course
+import a.erubit.platform.course.lesson.BunchLesson
+import a.erubit.platform.course.lesson.Lesson
 import android.content.Context
 import org.json.JSONException
 import org.json.JSONObject
@@ -82,6 +84,8 @@ class FlipcardLesson internal constructor(course: Course) : BunchLesson(course) 
 
             jo = jso.getJSONObject("back")
             fc.back.content = jo.getString("content")
+
+            title = fc.face.content
 
             flipcard = fc
 

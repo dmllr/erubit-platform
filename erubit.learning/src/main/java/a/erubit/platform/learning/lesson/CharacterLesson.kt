@@ -1,6 +1,8 @@
-package a.erubit.platform.course.lesson
+package a.erubit.platform.learning.lesson
 
 import a.erubit.platform.course.Course
+import a.erubit.platform.course.lesson.BunchLesson
+import a.erubit.platform.course.lesson.Lesson
 import android.content.Context
 import org.json.JSONException
 import org.json.JSONObject
@@ -96,6 +98,8 @@ open class CharacterLesson internal constructor(course: Course) : BunchLesson(co
 		override fun fromJsonObject(jso: JSONObject): BunchLesson.Item {
 			character = jso.getString("c")
 			meaning = jso.getString("m")
+
+			title = character
 
 			return this
 		}
