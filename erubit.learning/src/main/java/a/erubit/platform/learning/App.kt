@@ -57,8 +57,6 @@ abstract class App : a.erubit.platform.android.App() {
 						ProgressManager.i().save(context, lesson)
 						listener.onInteraction(InteractionManager.InteractionEvent.POSITIVE)
 					}
-
-					InteractionManager.i().setupQuickButtons(context, view, lesson, listener)
 				}
 			})
 
@@ -103,8 +101,6 @@ abstract class App : a.erubit.platform.android.App() {
 
 						listener.onInteraction(InteractionManager.InteractionEvent.CLOSE)
 					}
-
-					InteractionManager.i().setupQuickButtons(context, view, lesson, listener)
 				}
 			})
 
@@ -214,7 +210,6 @@ abstract class App : a.erubit.platform.android.App() {
 					})
 
 					swipeStack.resetStack()
-					InteractionManager.i().setupQuickButtons(context, view, lesson, listener)
 				}
 			})
 
@@ -285,8 +280,6 @@ abstract class App : a.erubit.platform.android.App() {
 							U.animateNegative(view.findViewById(R.id.card))
 						}
 					}
-
-					InteractionManager.i().setupQuickButtons(context, view, lesson, listener)
 				}
 			}
 
@@ -349,7 +342,6 @@ abstract class App : a.erubit.platform.android.App() {
 					})
 
 					swipeStack.resetStack()
-					InteractionManager.i().setupQuickButtons(context, view, lesson, listener)
 				}
 			})
 		}

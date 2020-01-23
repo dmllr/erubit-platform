@@ -1,17 +1,13 @@
 package a.erubit.platform.interaction
 
-import a.erubit.platform.R
 import a.erubit.platform.course.CourseManager
 import a.erubit.platform.course.ProgressManager
 import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.course.lesson.Lesson.PresentableDescriptor
 import android.content.Context
-import android.graphics.PixelFormat
-import android.os.Build
 import android.os.Vibrator
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.BaseAdapter
 import java.util.*
 
@@ -20,18 +16,6 @@ class InteractionManager private constructor() {
 	private var lessonInflaters: LinkedHashMap<String, Lesson.Inflater> = LinkedHashMap(0)
 	private var mInteractionViews: LinkedHashMap<String, View> = LinkedHashMap(0)
 	private var mLastViewData: InteractionViewData? = null
-
-	private val defaultLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
-			WindowManager.LayoutParams.MATCH_PARENT,
-			WindowManager.LayoutParams.MATCH_PARENT,
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-				WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-			else
-				WindowManager.LayoutParams.TYPE_PHONE,
-			WindowManager.LayoutParams.FLAG_FULLSCREEN or
-					WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-			PixelFormat.TRANSLUCENT
-	)
 
 	fun initialize(context: Context) {
 		createInteractionViews(context)
@@ -51,12 +35,6 @@ class InteractionManager private constructor() {
 	private fun createInteractionViews(context: Context) {
 		for (i in lessonInflaters)
 			mInteractionViews[i.key] = i.value.createView(context)
-	}
-
-	fun getInteractionView(context: Context, listener: InteractionListener): View? {
-		val lesson = CourseManager.i().getNextLesson()
-
-		return lesson?.let { getInteractionView(context, it, listener) }
 	}
 
 	fun getInteractionView(context: Context, lesson: Lesson, listener: InteractionListener): View? {
@@ -89,10 +67,6 @@ class InteractionManager private constructor() {
 		return i().populate(context, mLastViewData!!.mLesson, mLastViewData!!.mPresentableDescription, listener)
 	}
 
-	private fun onInteraction(listener: InteractionListener, event: InteractionEvent) {
-		listener.onInteraction(event)
-	}
-
 	fun populate(context: Context, lesson: Lesson?, pd: PresentableDescriptor, listener: InteractionListener): View? {
 		if (lesson == null || pd.mStatus !== Lesson.Status.OK)
 			return null
@@ -107,36 +81,10 @@ class InteractionManager private constructor() {
 			pd.mPresentable!!,
 			listener
 		)
-		view.layoutParams = defaultLayoutParams
 
 		mLastViewData = InteractionViewData(lesson, pd)
 
 		return view
-	}
-
-	fun setupQuickButtons(context: Context, view: View, lesson: Lesson, listener: InteractionListener) {
-		view.findViewById<View>(android.R.id.closeButton).setOnClickListener { onInteraction(listener, InteractionEvent.CLOSE) }
-
-		val disableForListener = View.OnClickListener { v: View ->
-			var event = InteractionEvent.CLOSE
-
-            when (v.id) {
-				R.id.disableFor1h -> event = InteractionEvent.BUSY1
-				R.id.disableFor2h -> event = InteractionEvent.BUSY2
-				R.id.disableFor4h -> event = InteractionEvent.BUSY4
-			}
-
-			onInteraction(listener, event)
-
-			val progress = lesson.mProgress!!
-			if (progress.interactionDate == 0L) {
-				progress.interactionDate = System.currentTimeMillis()
-				ProgressManager.i().save(context, lesson)
-			}
-		}
-		view.findViewById<View>(R.id.disableFor1h).setOnClickListener(disableForListener)
-		view.findViewById<View>(R.id.disableFor2h).setOnClickListener(disableForListener)
-		view.findViewById<View>(R.id.disableFor4h).setOnClickListener(disableForListener)
 	}
 
 	fun vibrateAsFail(context: Context) {

@@ -1,7 +1,9 @@
 package a.erubit.platform.android
 
 import a.erubit.platform.R
-import a.erubit.platform.interaction.AnalyticsManager
+import a.erubit.platform.course.CourseManager
+import a.erubit.platform.course.ProgressManager
+import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.interaction.InteractionManager
 import a.erubit.platform.interaction.InteractionManager.InteractionEvent
 import a.erubit.platform.interaction.InteractionManager.InteractionListener
@@ -11,23 +13,39 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
+import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_MIN
-import android.view.View
-import android.view.WindowManager
 import t.TinyDB
 import u.C
 
 class InteractionService : Service(), InteractionListener {
 	private val interactionServiceFgId = 9990
 
-	private var mWindowManager: WindowManager? = null
-	private var mInteractionView: View? = null
+	private lateinit var mWindowManager: WindowManager
+	private lateinit var mInteractionContainerView: View
+
+	private val defaultLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
+		WindowManager.LayoutParams.MATCH_PARENT,
+		WindowManager.LayoutParams.MATCH_PARENT,
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+		else
+			WindowManager.LayoutParams.TYPE_PHONE,
+		WindowManager.LayoutParams.FLAG_FULLSCREEN or
+			WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+		PixelFormat.TRANSLUCENT
+	)
+
+
+
 	private var mNextTimeSlot: Long = 0
 
 	override fun onBind(intent: Intent): IBinder? {
@@ -38,38 +56,24 @@ class InteractionService : Service(), InteractionListener {
 		val enabled = (TinyDB(applicationContext).getBoolean(C.SP_ENABLED_ON_UNLOCK, true)
 				&& System.currentTimeMillis() > mNextTimeSlot && (Build.VERSION.SDK_INT < 23 || Settings.canDrawOverlays(applicationContext)))
 
-		if (enabled && (mInteractionView == null || mInteractionView!!.windowToken == null)) {
-			val interactionView = InteractionManager.i().getInteractionView(applicationContext, this)
+		if (enabled && mInteractionContainerView.windowToken == null) {
+			val lesson = CourseManager.i().getNextLesson() ?: return super.onStartCommand(intent, flags, startId)
+			val interactionView = InteractionManager.i().getInteractionView(applicationContext, lesson, this)
 
 			if (interactionView != null) {
-				interactionView.findViewById<View>(R.id.quickButtonBar).visibility = View.VISIBLE
-				mWindowManager!!.addView(interactionView, interactionView.layoutParams)
-				mInteractionView = interactionView
+				setupQuickButtons(applicationContext, lesson, this)
+
+				val root = mInteractionContainerView.findViewById<ViewGroup>(R.id.content)
+				root.removeAllViews()
+				root.addView(interactionView)
+
+				mWindowManager.addView(mInteractionContainerView, defaultLayoutParams)
 
 				startForeground()
 			}
 		}
 
 		return super.onStartCommand(intent, flags, startId)
-	}
-
-	override fun onConfigurationChanged(newConfig: Configuration) {
-		super.onConfigurationChanged(newConfig)
-		// only if interaction window is shown now
-		if (mInteractionView != null && mInteractionView!!.windowToken != null) {
-			InteractionManager.i().onConfigurationChanged(applicationContext)
-			updateView()
-		}
-	}
-
-	private fun updateView() {
-		removeView()
-		mInteractionView = InteractionManager.i().getLastInteractionView(applicationContext, this)
-		if (mInteractionView != null) {
-			mInteractionView!!.findViewById<View>(R.id.quickButtonBar).visibility = View.VISIBLE
-			mWindowManager!!.addView(mInteractionView, mInteractionView!!.layoutParams)
-			AnalyticsManager.i().reportInteractionScreen()
-		}
 	}
 
 	private fun startForeground() {
@@ -111,7 +115,7 @@ class InteractionService : Service(), InteractionListener {
 		super.onCreate()
 
 		mWindowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-		mInteractionView = null
+		mInteractionContainerView = View.inflate(applicationContext, R.layout.view_interaction, null)
 	}
 
 	override fun onDestroy() {
@@ -121,10 +125,35 @@ class InteractionService : Service(), InteractionListener {
 	}
 
 	private fun removeView() {
-		if (mInteractionView != null && mInteractionView!!.windowToken != null)
-			mWindowManager!!.removeView(mInteractionView)
+		if (mInteractionContainerView.windowToken != null)
+			mWindowManager.removeView(mInteractionContainerView)
 
 		stopForeground(true)
+	}
+
+	fun setupQuickButtons(context: Context, lesson: Lesson, listener: InteractionListener) {
+		mInteractionContainerView.findViewById<View>(android.R.id.closeButton).setOnClickListener { listener.onInteraction(InteractionEvent.CLOSE) }
+
+		val disableForListener = View.OnClickListener { v: View ->
+			var event = InteractionEvent.CLOSE
+
+			when (v.id) {
+				R.id.disableFor1h -> event = InteractionEvent.BUSY1
+				R.id.disableFor2h -> event = InteractionEvent.BUSY2
+				R.id.disableFor4h -> event = InteractionEvent.BUSY4
+			}
+
+			listener.onInteraction(event)
+
+			val progress = lesson.mProgress!!
+			if (progress.interactionDate == 0L) {
+				progress.interactionDate = System.currentTimeMillis()
+				ProgressManager.i().save(context, lesson)
+			}
+		}
+		mInteractionContainerView.findViewById<View>(R.id.disableFor1h).setOnClickListener(disableForListener)
+		mInteractionContainerView.findViewById<View>(R.id.disableFor2h).setOnClickListener(disableForListener)
+		mInteractionContainerView.findViewById<View>(R.id.disableFor4h).setOnClickListener(disableForListener)
 	}
 
 	override fun onInteraction(event: InteractionEvent) {
