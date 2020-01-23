@@ -14,13 +14,15 @@ class LanguageCourse : Course() {
 	override val progress: Progress
 		get() = object : Progress() {}
 
-	fun loadFromResource(context: Context, resourceId: Int) {
+	fun loadFromResource(context: Context, resourceId: Int): LanguageCourse {
 		try {
 			val json = U.loadStringResource(context, resourceId)
 			loadFromString(context, json)
 		} catch (ignored: IOException) {
 			ignored.printStackTrace()
 		}
+
+		return this
 	}
 
 	private fun loadFromString(context: Context, json: String) {

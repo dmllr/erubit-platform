@@ -48,10 +48,7 @@ class CourseManager private constructor() {
 	}
 
 	private fun fromResourceId(context: Context, resourceId: Int): LanguageCourse {
-		val c = LanguageCourse()
-		c.loadFromResource(context, resourceId)
-
-		return c
+		return LanguageCourse().loadFromResource(context, resourceId)
 	}
 
 	fun getCourse(id: String?): Course? {
