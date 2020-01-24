@@ -494,7 +494,7 @@ class FuriganaViewMultiline : AutoResizeTextView {
 		private const val TYPE_FURIGANA = 8
 
 		/* regex for kanji with struct {kanji:furigana} */
-		private const val KANJI_REGEX = "(([{])([\\u4E00-\\u9FFF\\u3040-\\u30FF0-9]*)([:])([\\u3040-\\u30FFー[0-9]]*)([}]))"
+		private const val KANJI_REGEX = "(([{])([ぁ-ゔゞァ-・ヽヾ゛゜ー一-龯０-９0-9]*)([:])([\\u3040-\\u30FFー[0-9]]*)([}]))"
 		private const val BOLD_TEXT_REGEX = "(?m)(?d)(?s)(([<][b][>])(.*?)([<][\\/][b][>]))"
 		private const val ITALIC_TEXT_REGEX = "(?m)(?d)(?s)(([<][i][>])(.*?)([<][\\/][i][>]))"
 		private const val BREAK_REGEX = "(<br ?\\/?>)"
