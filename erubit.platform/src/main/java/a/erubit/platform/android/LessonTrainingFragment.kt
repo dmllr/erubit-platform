@@ -35,10 +35,6 @@ class LessonTrainingFragment : TrainingFragment() {
 				return null
 
 			val pd = presentables[mPresentableIndex]
-			val v = InteractionManager.i().populate(context!!, mLesson, pd, this)
-				?: return null
-			v.findViewById<View>(R.id.quickButtonBar).visibility = View.GONE
-
-			return v
+			return InteractionManager.i().populate(context!!, mLesson, pd, this)
 		}
 }

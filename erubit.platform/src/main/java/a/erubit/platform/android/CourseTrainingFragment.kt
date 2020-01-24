@@ -26,10 +26,6 @@ class CourseTrainingFragment : TrainingFragment() {
 			val lesson = (if (mCourse != null) CourseManager.i().getNextLesson(mCourse!!) else CourseManager.i().getNextLesson())
 				?: return null
 
-			val v = InteractionManager.i().getInteractionView(context, lesson, this) ?: return null
-
-			v.findViewById<View>(R.id.quickButtonBar).visibility = View.GONE
-
-			return v
+			return InteractionManager.i().getInteractionView(context, lesson, this) ?: return null
 		}
 }
