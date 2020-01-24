@@ -4,7 +4,7 @@ import a.erubit.platform.course.Course
 import a.erubit.platform.course.lesson.BunchLesson
 
 
-class VocabularyLesson internal constructor(course: Course) : CharacterLesson(course) {
+class VocabularyLesson constructor(course: Course) : CharacterLesson(course) {
 
 	override val rankFamiliar: Int
 		get() = 1

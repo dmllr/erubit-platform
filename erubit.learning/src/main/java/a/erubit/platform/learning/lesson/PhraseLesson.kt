@@ -6,7 +6,7 @@ import u.U
 import java.util.*
 
 
-class PhraseLesson internal constructor(course: Course) : CharacterLesson(course) {
+class PhraseLesson constructor(course: Course) : CharacterLesson(course) {
 	private val mRandom: Random = Random()
 	private val mApxSize: Int = 3 + mRandom.nextInt(3)
 

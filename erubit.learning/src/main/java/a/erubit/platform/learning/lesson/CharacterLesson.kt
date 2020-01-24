@@ -12,7 +12,7 @@ import java.io.IOException
 import java.util.*
 
 
-open class CharacterLesson internal constructor(course: Course) : BunchLesson(course) {
+open class CharacterLesson constructor(course: Course) : BunchLesson(course) {
 	override val rankFamiliar: Int
 		get() = 1
 	override val rankLearned: Int
@@ -91,7 +91,7 @@ open class CharacterLesson internal constructor(course: Course) : BunchLesson(co
 	}
 
 
-	inner class Item internal constructor() : BunchLesson.Item() {
+	inner class Item : BunchLesson.Item() {
 		var character: String = ""
 		var meaning: String = ""
 
@@ -106,7 +106,7 @@ open class CharacterLesson internal constructor(course: Course) : BunchLesson(co
 	}
 
 
-	inner class Problem internal constructor(lesson: Lesson, item: Item) : BunchLesson.Problem(lesson, item) {
+	inner class Problem constructor(lesson: Lesson, item: Item) : BunchLesson.Problem(lesson, item) {
 		var text: String = ""
 		var meaning: String = ""
 		var variants: Array<String?> = arrayOfNulls(C.NUMBER_OF_ANSWERS)

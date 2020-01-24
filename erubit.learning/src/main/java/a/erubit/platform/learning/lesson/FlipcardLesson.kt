@@ -11,7 +11,7 @@ import java.io.IOException
 import java.util.*
 
 
-class FlipcardLesson internal constructor(course: Course) : BunchLesson(course) {
+class FlipcardLesson constructor(course: Course) : BunchLesson(course) {
     override val rankFamiliar: Int
         get() = 1
     override val rankLearned: Int
@@ -69,7 +69,7 @@ class FlipcardLesson internal constructor(course: Course) : BunchLesson(course) 
     }
 
 
-    inner class Item internal constructor() : BunchLesson.Item() {
+    inner class Item : BunchLesson.Item() {
         lateinit var flipcard: Flipcard
 
         override fun fromJsonObject(jso: JSONObject): BunchLesson.Item {
@@ -94,7 +94,7 @@ class FlipcardLesson internal constructor(course: Course) : BunchLesson(course) 
 	}
 
 
-    inner class Problem internal constructor(lesson: Lesson, item: Item) : BunchLesson.Problem(lesson, item) {
+    inner class Problem constructor(lesson: Lesson, item: Item) : BunchLesson.Problem(lesson, item) {
         val flipcard = item.flipcard
 
         override fun isSolved(answer: String): Boolean {
