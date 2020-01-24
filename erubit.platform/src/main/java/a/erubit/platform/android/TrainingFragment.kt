@@ -34,23 +34,6 @@ abstract class TrainingFragment : Fragment(), InteractionListener, IUxController
 		switchView()
 	}
 
-	override fun onConfigurationChanged(newConfig: Configuration) {
-		super.onConfigurationChanged(newConfig)
-
-		InteractionManager.i().onConfigurationChanged(context!!)
-		updateView(context)
-	}
-
-	private fun updateView(context: Context?) {
-		val v = InteractionManager.i().getLastInteractionView(context!!, this)
-
-		v!!.findViewById<View>(R.id.quickButtonBar).visibility = View.GONE
-
-		val animator = mViewAnimator ?: return
-		animator.removeAllViews()
-		animator.addView(v)
-	}
-
 	override fun onInteraction(event: InteractionEvent) {
 		if (event !== InteractionEvent.NEGATIVE)
 			switchView()
