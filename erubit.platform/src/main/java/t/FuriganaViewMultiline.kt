@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
+import android.widget.TextView
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.math.ceil
@@ -13,7 +14,7 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 
-class FuriganaViewMultiline : AutoResizeTextView {
+class FuriganaViewMultiline : TextView {
 	private val mLines: Vector<Line> = Vector(0)
 	private val mAllTexts: Vector<PairText> = Vector(0)
 
