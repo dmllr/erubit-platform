@@ -90,7 +90,8 @@ abstract class App : a.erubit.platform.android.App() {
 					view.findViewById<View>(R.id.familiar).setOnClickListener {
 						prob.attempt(true)
 						prob.treatResult()
-						lesson.mProgress!!.trainDate = System.currentTimeMillis()
+						lesson.mProgress!!.interactionDate = System.currentTimeMillis()
+						lesson.mProgress!!.trainDate = lesson.mProgress!!.interactionDate
 
 						ProgressManager.i().save(context, lesson)
 
@@ -98,6 +99,7 @@ abstract class App : a.erubit.platform.android.App() {
 					}
 					view.findViewById<View>(R.id.no_idea).setOnClickListener {
 						prob.attempt(false)
+						lesson.mProgress!!.interactionDate = System.currentTimeMillis()
 
 						listener.onInteraction(InteractionManager.InteractionEvent.CLOSE)
 					}
