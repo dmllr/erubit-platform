@@ -96,10 +96,6 @@ class FlipcardLesson constructor(course: Course) : BunchLesson(course) {
 
     inner class Problem constructor(lesson: Lesson, item: Item) : BunchLesson.Problem(lesson, item) {
         val flipcard = item.flipcard
-
-        override fun isSolved(answer: String): Boolean {
-            return true  // +1 to learning rate every time flipcard has been shown
-        }
     }
 
 }

@@ -116,7 +116,7 @@ open class CharacterLesson constructor(course: Course) : BunchLesson(course) {
 			meaning = item.meaning
 		}
 
-		override fun isSolved(answer: String): Boolean {
+		fun isSolved(answer: String): Boolean {
 			return U.equals(meaning, answer)
 		}
 	}
