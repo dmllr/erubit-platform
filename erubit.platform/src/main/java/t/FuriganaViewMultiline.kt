@@ -11,6 +11,7 @@ import java.util.*
 import java.util.regex.Pattern
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 
@@ -95,6 +96,11 @@ class FuriganaViewMultiline : TextView {
 			width = ceil(mMaxLineWidth.toDouble()).roundToInt()
 		if (heightMode != MeasureSpec.UNSPECIFIED && height > heightSize)
 			height = height or View.MEASURED_STATE_TOO_SMALL
+
+		if (widthMode == MeasureSpec.EXACTLY)
+			width = min(widthSize, width)
+		if (heightMode == MeasureSpec.EXACTLY)
+			height = min(heightSize, height)
 
 		setMeasuredDimension(width, height)
 	}
@@ -211,6 +217,9 @@ class FuriganaViewMultiline : TextView {
 					x += pairText.mWidth
 				}
 				y += mLineHeight
+
+				if (y > height)
+					break
 			}
 		} else
 			super.onDraw(canvas)
