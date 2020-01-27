@@ -9,6 +9,8 @@
 
     <string name="grant_permission_bar">Micro learning mode requires a drawing over other apps permission. Tap here to grant it.</string>
     <string name="grant_permission_dialog">Micro learning mode requires a drawing over other apps permission. Without permission, only traditional learning will be available.\n\nPlease tap OK now and then permit drawing over other apps on next screen.</string>
+    <string name="grant_battery_bar">Android system\'s Doze Mode may disable Micro Learning popup when device unlocks. Tap here to fix.</string>
+    <string name="grant_battery_dialog">Android has a special Doze Mode, made to save battery power, but it may close background applications and disable Micro Learning mode when this device unlocks.\n\nThis application is very well-optimized, energy consumption is close to zero and will no consume battery when running in background.\n\nPlease allow this app to be run in background at the next system prompt.</string>
     <string name="understood">Understood</string>
     <string name="camera">Camera</string>
     <string name="not_now">⨯ Close</string>

@@ -11,6 +11,7 @@ import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
 import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.interaction.AnalyticsManager
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,6 +19,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import com.google.android.material.navigation.NavigationView
@@ -47,7 +49,8 @@ open class NavActivity :
 	NavigationView.OnNavigationItemSelectedListener,
 	OnSharedPreferenceChangeListener
 {
-	private var mViewPermissionsWarning: View? = null
+	private lateinit var mViewPermissionsWarning: View
+	private lateinit var mViewBatteryWarning: View
 	private var mFab: View? = null
 
 	private fun setContentView() {
@@ -94,7 +97,10 @@ open class NavActivity :
 		mFab!!.setOnClickListener { trainingButtonTapped() }
 
 		mViewPermissionsWarning = findViewById(R.id.permissionsWarning)
-		mViewPermissionsWarning!!.setOnClickListener { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) askForPermission() }
+		mViewPermissionsWarning.setOnClickListener { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) askForPermission() }
+
+		mViewBatteryWarning = findViewById(R.id.batteryWarning)
+		mViewBatteryWarning.setOnClickListener { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) askForBatteryPermission() }
 
 		val switchUnlock = findViewById<View>(R.id.switchEnableOnUnlock) as SwitchCompat
 		switchUnlock.isChecked = TinyDB(applicationContext).getBoolean(C.SP_ENABLED_ON_UNLOCK, true)
@@ -104,9 +110,10 @@ open class NavActivity :
 	override fun onStart() {
 		super.onStart()
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			checkDrawOverlayPermission()
-		else
+			checkBatteryPermission()
+		} else
 			permissionGranted()
 	}
 
@@ -120,6 +127,27 @@ open class NavActivity :
 		super.onPause()
 
 		TinyDB(this).registerOnSharedPreferenceChangeListener(this)
+	}
+
+	@SuppressLint("BatteryLife")
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private fun askForBatteryPermission() {
+		TinyDB(this).putBoolean(C.SP_BATTERY_REQUESTED, true)
+
+		val dialogClickListener = DialogInterface.OnClickListener { _: DialogInterface?, which: Int ->
+			when (which) {
+				DialogInterface.BUTTON_POSITIVE -> {
+					startActivityForResult(Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName")),
+						ACTION_IGNORE_BATTERY_OPTIMIZATION_PERMISSION_REQUEST_CODE)
+				}
+			}
+		}
+
+		val builder = AlertDialog.Builder(this)
+		builder.setMessage(R.string.grant_battery_dialog)
+			.setPositiveButton(android.R.string.yes, dialogClickListener)
+			.setNegativeButton(android.R.string.no, null)
+			.show()
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
@@ -143,7 +171,11 @@ open class NavActivity :
 	}
 
 	private fun permissionGranted() {
-		mViewPermissionsWarning!!.visibility = View.GONE
+		mViewPermissionsWarning.visibility = View.GONE
+	}
+
+	private fun batteryGranted() {
+		mViewBatteryWarning.visibility = View.GONE
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
@@ -158,10 +190,31 @@ open class NavActivity :
 		}
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private fun checkBatteryPermission() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isBatteryOptimized()) {
+			val permissionRequested = TinyDB(this).getBoolean(C.SP_BATTERY_REQUESTED, false)
+
+			if (!permissionRequested)
+				askForBatteryPermission()
+		} else
+			batteryGranted()
+	}
+
+	private fun isBatteryOptimized(): Boolean {
+		val pm = applicationContext.getSystemService(POWER_SERVICE) as PowerManager
+		return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) false else !pm.isIgnoringBatteryOptimizations(applicationContext.packageName)
+	}
+
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) { // check once again if we have permission
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) { // continue here - permission was granted
 				permissionGranted()
+			}
+		}
+		if (requestCode == ACTION_IGNORE_BATTERY_OPTIMIZATION_PERMISSION_REQUEST_CODE) { // check once again if we have permission
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isBatteryOptimized()) { // permission was NOT granted, notify user
+				batteryGranted()
 			}
 		}
 
@@ -316,7 +369,9 @@ open class NavActivity :
 		findViewById<View>(R.id.onScreenSettings).visibility = if (c == 0) View.VISIBLE else View.GONE
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))
-			mViewPermissionsWarning!!.visibility = if (c == 0) View.VISIBLE else View.GONE
+			mViewPermissionsWarning.visibility = if (c == 0) View.VISIBLE else View.GONE
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isBatteryOptimized())
+			mViewBatteryWarning.visibility = if (c == 0) View.VISIBLE else View.GONE
 
 		val fab = mFab ?: return
 		if (fragment is IUxController)
@@ -338,5 +393,6 @@ open class NavActivity :
 
 	companion object {
 		private const val ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5432
+		private const val ACTION_IGNORE_BATTERY_OPTIMIZATION_PERMISSION_REQUEST_CODE = 5433
 	}
 }

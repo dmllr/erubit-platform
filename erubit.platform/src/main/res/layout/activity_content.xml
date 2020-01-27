@@ -65,16 +65,25 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorAccent"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
-            <LinearLayout
-                android:orientation="vertical"
+            <TextView
                 android:padding="@dimen/general_margin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/grant_permission_bar" />
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_white"
+                android:text="@string/grant_permission_bar" />
+        </androidx.appcompat.widget.Toolbar>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/batteryWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorAccent"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            <TextView
+                android:padding="@dimen/general_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_white"
+                android:text="@string/grant_battery_bar" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
