@@ -20,13 +20,10 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.view.Menu
 import androidx.annotation.RequiresApi
-import com.google.android.material.navigation.NavigationView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
@@ -45,7 +42,6 @@ open class NavActivity :
 	OnCourseInteractionListener,
 	OnLessonInteractionListener,
 	OnTrainingInteractionListener,
-	NavigationView.OnNavigationItemSelectedListener,
 	OnSharedPreferenceChangeListener
 {
 	private lateinit var mViewPermissionsWarning: View
@@ -53,7 +49,7 @@ open class NavActivity :
 	private var mFab: View? = null
 
 	private fun setContentView() {
-		setContentView(R.layout.activity_navigation)
+		setContentView(R.layout.activity_content)
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,12 +66,6 @@ open class NavActivity :
 
 		val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
 		setSupportActionBar(toolbar)
-		val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-		val toggle = ActionBarDrawerToggle(
-				this, drawer, toolbar,
-				R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-		drawer.addDrawerListener(toggle)
-		toggle.syncState()
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 		supportFragmentManager.addOnBackStackChangedListener {
@@ -84,13 +74,8 @@ open class NavActivity :
 				toolbar.setNavigationOnClickListener { onBackPressed() }
 			} else { //show hamburger
 				supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-				toggle.syncState()
-				toolbar.setNavigationOnClickListener { drawer.openDrawer(GravityCompat.START) }
 			}
 		}
-
-		val navigationView = findViewById<View>(R.id.nav_view) as NavigationView
-		navigationView.setNavigationItemSelectedListener(this)
 
 		mFab = findViewById(R.id.fab)
 		mFab!!.setOnClickListener { trainingButtonTapped() }
@@ -220,37 +205,24 @@ open class NavActivity :
 		super.onActivityResult(requestCode, resultCode, data)
 	}
 
-	override fun onNavigationItemSelected(item: MenuItem): Boolean { // Handle navigation view item clicks here.
-		val id = item.itemId
-
-		if (id == R.id.nav_share) {
-			val message = CourseManager.i().getSharingText(this)
-			val share = Intent(Intent.ACTION_SEND)
-			share.type = "text/plain"
-			share.putExtra(Intent.EXTRA_TEXT, message)
-			startActivity(Intent.createChooser(share, getString(R.string.share_my_progress)))
-		}
-
-		if (id == R.id.nav_settings) {
-			putFragment(PreferencesFragment())
-		}
-
-		val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-		drawer.closeDrawer(GravityCompat.START)
-
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		menuInflater.inflate(R.menu.activity_navigation, menu)
 		return true
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		val id = item.itemId
-
-		if (id == android.R.id.home) {
-			popFragment()
-
-			return true
+		return when (item.itemId) {
+			R.id.nav_settings -> {
+				putFragment(PreferencesFragment())
+				true
+			}
+			android.R.id.home -> {
+				popFragment()
+				true
+			}
+			else -> super.onOptionsItemSelected(item)
 		}
-
-		return super.onOptionsItemSelected(item)
 	}
 
 	private fun trainingButtonTapped() {
@@ -265,11 +237,7 @@ open class NavActivity :
 	}
 
 	override fun onBackPressed() {
-		val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-		if (drawer.isDrawerOpen(GravityCompat.START))
-			drawer.closeDrawer(GravityCompat.START)
-		else
-			if (!popFragment()) super.onBackPressed()
+		if (!popFragment()) super.onBackPressed()
 	}
 
 	override fun onCourseInteraction(course: Course, action: CourseInteractionAction) {
