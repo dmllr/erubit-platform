@@ -1,4 +1,4 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
 import a.erubit.platform.R
 import a.erubit.platform.course.CourseManager

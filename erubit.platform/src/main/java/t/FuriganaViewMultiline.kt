@@ -6,14 +6,16 @@ import android.graphics.Rect
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
+import android.widget.TextView
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 
-class FuriganaViewMultiline : AutoResizeTextView {
+class FuriganaViewMultiline : TextView {
 	private val mLines: Vector<Line> = Vector(0)
 	private val mAllTexts: Vector<PairText> = Vector(0)
 
@@ -94,6 +96,11 @@ class FuriganaViewMultiline : AutoResizeTextView {
 			width = ceil(mMaxLineWidth.toDouble()).roundToInt()
 		if (heightMode != MeasureSpec.UNSPECIFIED && height > heightSize)
 			height = height or View.MEASURED_STATE_TOO_SMALL
+
+		if (widthMode == MeasureSpec.EXACTLY)
+			width = min(widthSize, width)
+		if (heightMode == MeasureSpec.EXACTLY)
+			height = min(heightSize, height)
 
 		setMeasuredDimension(width, height)
 	}
@@ -210,6 +217,9 @@ class FuriganaViewMultiline : AutoResizeTextView {
 					x += pairText.mWidth
 				}
 				y += mLineHeight
+
+				if (y > height)
+					break
 			}
 		} else
 			super.onDraw(canvas)
@@ -494,7 +504,7 @@ class FuriganaViewMultiline : AutoResizeTextView {
 		private const val TYPE_FURIGANA = 8
 
 		/* regex for kanji with struct {kanji:furigana} */
-		private const val KANJI_REGEX = "(([{])([\\u4E00-\\u9FFF\\u3040-\\u30FF0-9]*)([:])([\\u3040-\\u30FFー[0-9]]*)([}]))"
+		private const val KANJI_REGEX = "(([{])([ぁ-ゔゞァ-・ヽヾ゛゜ー一-龯０-９0-9]*)([:])([\\u3040-\\u30FFー[0-9]]*)([}]))"
 		private const val BOLD_TEXT_REGEX = "(?m)(?d)(?s)(([<][b][>])(.*?)([<][\\/][b][>]))"
 		private const val ITALIC_TEXT_REGEX = "(?m)(?d)(?s)(([<][i][>])(.*?)([<][\\/][i][>]))"
 		private const val BREAK_REGEX = "(<br ?\\/?>)"

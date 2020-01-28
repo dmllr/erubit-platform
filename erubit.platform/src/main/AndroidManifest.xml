@@ -3,19 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="a.erubit.platform">
 
-    <uses-permission-sdk-23 android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission  android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+
 
     <application>
         <activity
-            android:name=".android.NavActivity"
+            android:name=".NavActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
 
         <service
-            android:name=".android.InteractionService"
+            android:name=".InteractionService"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
     </application>
 

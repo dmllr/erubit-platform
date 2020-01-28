@@ -1,4 +1,4 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
 import a.erubit.platform.course.CourseManager
 import a.erubit.platform.course.lesson.Lesson
@@ -14,7 +14,7 @@ abstract class App : Application() {
 		super.onCreate()
 
 		applicationContext.registerReceiver(
-				UserPresentBroadcastReceiver(),
+			UserPresentBroadcastReceiver(),
 				IntentFilter(Intent.ACTION_USER_PRESENT))
 	}
 

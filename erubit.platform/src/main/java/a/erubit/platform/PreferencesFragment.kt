@@ -1,5 +1,6 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
+import a.erubit.platform.IUxController
 import a.erubit.platform.R
 import android.os.Bundle
 import android.view.LayoutInflater

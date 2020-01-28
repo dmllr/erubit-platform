@@ -23,7 +23,7 @@ import u.C
 import u.U
 
 
-abstract class App : a.erubit.platform.android.App() {
+abstract class App : a.erubit.platform.App() {
 
 	fun initialize(i: Initializer) {
 		i.registerLessons()
@@ -33,7 +33,7 @@ abstract class App : a.erubit.platform.android.App() {
 	}
 
 
-	abstract inner class Initializer : a.erubit.platform.android.App.Initializer() {
+	abstract inner class Initializer : a.erubit.platform.App.Initializer() {
 		override fun registerLessons() {
 			super.registerLessons()
 
@@ -90,7 +90,8 @@ abstract class App : a.erubit.platform.android.App() {
 					view.findViewById<View>(R.id.familiar).setOnClickListener {
 						prob.attempt(true)
 						prob.treatResult()
-						lesson.mProgress!!.trainDate = System.currentTimeMillis()
+						lesson.mProgress!!.interactionDate = System.currentTimeMillis()
+						lesson.mProgress!!.trainDate = lesson.mProgress!!.interactionDate
 
 						ProgressManager.i().save(context, lesson)
 
@@ -98,6 +99,7 @@ abstract class App : a.erubit.platform.android.App() {
 					}
 					view.findViewById<View>(R.id.no_idea).setOnClickListener {
 						prob.attempt(false)
+						lesson.mProgress!!.interactionDate = System.currentTimeMillis()
 
 						listener.onInteraction(InteractionManager.InteractionEvent.CLOSE)
 					}

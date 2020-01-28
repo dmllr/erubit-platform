@@ -75,7 +75,6 @@ abstract class Lesson(val course: Course) {
 
 		abstract fun spied()
 		abstract fun treatResult()
-		abstract fun isSolved(answer: String): Boolean
 	}
 
 }

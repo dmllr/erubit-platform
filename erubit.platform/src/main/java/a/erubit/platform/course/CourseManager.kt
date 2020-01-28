@@ -131,29 +131,6 @@ class CourseManager private constructor() {
 		return null
 	}
 
-	fun getSharingText(context: Context): String {
-		val resources = context.resources
-		val r = StringBuilder("I'm learning now ")
-		val size = mActiveCourses.size
-
-		if (size == 0) {
-			r.append(resources.getString(R.string.app_name)).append(" courses")
-		} else {
-			for (i in 0 until size - 1) {
-				r.append(mActiveCourses[i].name)
-				if (i < size - 2)
-					r.append(", ")
-			}
-			if (size > 1)
-				r.append(" and ")
-			r.append(mActiveCourses[size - 1].name)
-			r.append(" of ").append(resources.getString(R.string.app_name)).append(" courses")
-		}
-		r.append(".\nJoin me, download Android app at" + " ").append(resources.getString(R.string.play_url, context.packageName))
-
-		return r.toString()
-	}
-
 	fun registerInflater(type: String, lessonInflater: Lesson.Inflater) {
 		lessonInflaters[type] = lessonInflater
 	}

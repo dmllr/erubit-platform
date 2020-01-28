@@ -1,7 +1,6 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
 
-import a.erubit.platform.R
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
 import a.erubit.platform.course.lesson.Lesson

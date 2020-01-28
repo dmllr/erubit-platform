@@ -13,7 +13,7 @@ import java.io.IOException
 import java.util.*
 
 
-class WelcomeLesson internal constructor(course: Course) : Lesson(course) {
+class WelcomeLesson constructor(course: Course) : Lesson(course) {
 	private var welcomeText: String? = null
 
 	override fun getNextPresentable(context: Context): PresentableDescriptor {

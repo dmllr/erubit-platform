@@ -17,7 +17,7 @@
         android:fullBackupContent="@xml/backup_descriptor">
 
         <activity
-            android:name="a.erubit.platform.android.NavActivity"
+            android:name="a.erubit.platform.NavActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar">

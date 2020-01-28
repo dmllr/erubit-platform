@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimaryDark"
-    tools:context="a.erubit.platform.android.ProgressFragment">
+    tools:context="a.erubit.platform.ProgressFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

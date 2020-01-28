@@ -1,16 +1,16 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
-import a.erubit.platform.R
-import a.erubit.platform.android.CoursesFragment.CourseInteractionAction
-import a.erubit.platform.android.CoursesFragment.OnCourseInteractionListener
-import a.erubit.platform.android.LessonsFragment.LessonInteractionAction
-import a.erubit.platform.android.LessonsFragment.OnLessonInteractionListener
-import a.erubit.platform.android.TrainingFragment.OnTrainingInteractionListener
-import a.erubit.platform.android.TrainingFragment.TrainingInteractionAction
+import a.erubit.platform.CoursesFragment.CourseInteractionAction
+import a.erubit.platform.CoursesFragment.OnCourseInteractionListener
+import a.erubit.platform.LessonsFragment.LessonInteractionAction
+import a.erubit.platform.LessonsFragment.OnLessonInteractionListener
+import a.erubit.platform.TrainingFragment.OnTrainingInteractionListener
+import a.erubit.platform.TrainingFragment.TrainingInteractionAction
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
 import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.interaction.AnalyticsManager
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,14 +18,12 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
+import android.view.Menu
 import androidx.annotation.RequiresApi
-import com.google.android.material.navigation.NavigationView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
@@ -44,14 +42,14 @@ open class NavActivity :
 	OnCourseInteractionListener,
 	OnLessonInteractionListener,
 	OnTrainingInteractionListener,
-	NavigationView.OnNavigationItemSelectedListener,
 	OnSharedPreferenceChangeListener
 {
-	private var mViewPermissionsWarning: View? = null
+	private lateinit var mViewPermissionsWarning: View
+	private lateinit var mViewBatteryWarning: View
 	private var mFab: View? = null
 
 	private fun setContentView() {
-		setContentView(R.layout.activity_navigation)
+		setContentView(R.layout.activity_content)
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,12 +66,6 @@ open class NavActivity :
 
 		val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
 		setSupportActionBar(toolbar)
-		val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-		val toggle = ActionBarDrawerToggle(
-				this, drawer, toolbar,
-				R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-		drawer.addDrawerListener(toggle)
-		toggle.syncState()
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 		supportFragmentManager.addOnBackStackChangedListener {
@@ -82,19 +74,17 @@ open class NavActivity :
 				toolbar.setNavigationOnClickListener { onBackPressed() }
 			} else { //show hamburger
 				supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-				toggle.syncState()
-				toolbar.setNavigationOnClickListener { drawer.openDrawer(GravityCompat.START) }
 			}
 		}
-
-		val navigationView = findViewById<View>(R.id.nav_view) as NavigationView
-		navigationView.setNavigationItemSelectedListener(this)
 
 		mFab = findViewById(R.id.fab)
 		mFab!!.setOnClickListener { trainingButtonTapped() }
 
 		mViewPermissionsWarning = findViewById(R.id.permissionsWarning)
-		mViewPermissionsWarning!!.setOnClickListener { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) askForPermission() }
+		mViewPermissionsWarning.setOnClickListener { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) askForPermission() }
+
+		mViewBatteryWarning = findViewById(R.id.batteryWarning)
+		mViewBatteryWarning.setOnClickListener { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) askForBatteryPermission() }
 
 		val switchUnlock = findViewById<View>(R.id.switchEnableOnUnlock) as SwitchCompat
 		switchUnlock.isChecked = TinyDB(applicationContext).getBoolean(C.SP_ENABLED_ON_UNLOCK, true)
@@ -104,9 +94,10 @@ open class NavActivity :
 	override fun onStart() {
 		super.onStart()
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			checkDrawOverlayPermission()
-		else
+			checkBatteryPermission()
+		} else
 			permissionGranted()
 	}
 
@@ -120,6 +111,27 @@ open class NavActivity :
 		super.onPause()
 
 		TinyDB(this).registerOnSharedPreferenceChangeListener(this)
+	}
+
+	@SuppressLint("BatteryLife")
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private fun askForBatteryPermission() {
+		TinyDB(this).putBoolean(C.SP_BATTERY_REQUESTED, true)
+
+		val dialogClickListener = DialogInterface.OnClickListener { _: DialogInterface?, which: Int ->
+			when (which) {
+				DialogInterface.BUTTON_POSITIVE -> {
+					startActivityForResult(Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName")),
+						ACTION_IGNORE_BATTERY_OPTIMIZATION_PERMISSION_REQUEST_CODE)
+				}
+			}
+		}
+
+		val builder = AlertDialog.Builder(this)
+		builder.setMessage(R.string.grant_battery_dialog)
+			.setPositiveButton(android.R.string.yes, dialogClickListener)
+			.setNegativeButton(android.R.string.no, null)
+			.show()
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
@@ -143,7 +155,11 @@ open class NavActivity :
 	}
 
 	private fun permissionGranted() {
-		mViewPermissionsWarning!!.visibility = View.GONE
+		mViewPermissionsWarning.visibility = View.GONE
+	}
+
+	private fun batteryGranted() {
+		mViewBatteryWarning.visibility = View.GONE
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
@@ -158,47 +174,55 @@ open class NavActivity :
 		}
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private fun checkBatteryPermission() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isBatteryOptimized()) {
+			val permissionRequested = TinyDB(this).getBoolean(C.SP_BATTERY_REQUESTED, false)
+
+			if (!permissionRequested)
+				askForBatteryPermission()
+		} else
+			batteryGranted()
+	}
+
+	private fun isBatteryOptimized(): Boolean {
+		val pm = applicationContext.getSystemService(POWER_SERVICE) as PowerManager
+		return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) false else !pm.isIgnoringBatteryOptimizations(applicationContext.packageName)
+	}
+
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) { // check once again if we have permission
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) { // continue here - permission was granted
 				permissionGranted()
 			}
 		}
+		if (requestCode == ACTION_IGNORE_BATTERY_OPTIMIZATION_PERMISSION_REQUEST_CODE) { // check once again if we have permission
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isBatteryOptimized()) { // permission was NOT granted, notify user
+				batteryGranted()
+			}
+		}
 
 		super.onActivityResult(requestCode, resultCode, data)
 	}
 
-	override fun onNavigationItemSelected(item: MenuItem): Boolean { // Handle navigation view item clicks here.
-		val id = item.itemId
-
-		if (id == R.id.nav_share) {
-			val message = CourseManager.i().getSharingText(this)
-			val share = Intent(Intent.ACTION_SEND)
-			share.type = "text/plain"
-			share.putExtra(Intent.EXTRA_TEXT, message)
-			startActivity(Intent.createChooser(share, getString(R.string.share_my_progress)))
-		}
-
-		if (id == R.id.nav_settings) {
-			putFragment(PreferencesFragment())
-		}
-
-		val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-		drawer.closeDrawer(GravityCompat.START)
-
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		menuInflater.inflate(R.menu.activity_navigation, menu)
 		return true
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		val id = item.itemId
-
-		if (id == android.R.id.home) {
-			popFragment()
-
-			return true
+		return when (item.itemId) {
+			R.id.nav_settings -> {
+				putFragment(PreferencesFragment())
+				true
+			}
+			android.R.id.home -> {
+				popFragment()
+				true
+			}
+			else -> super.onOptionsItemSelected(item)
 		}
-
-		return super.onOptionsItemSelected(item)
 	}
 
 	private fun trainingButtonTapped() {
@@ -213,11 +237,7 @@ open class NavActivity :
 	}
 
 	override fun onBackPressed() {
-		val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-		if (drawer.isDrawerOpen(GravityCompat.START))
-			drawer.closeDrawer(GravityCompat.START)
-		else
-			if (!popFragment()) super.onBackPressed()
+		if (!popFragment()) super.onBackPressed()
 	}
 
 	override fun onCourseInteraction(course: Course, action: CourseInteractionAction) {
@@ -297,15 +317,14 @@ open class NavActivity :
 
 		fm.popBackStack()
 
-		if (null != fm.primaryNavigationFragment)
-			triggerUIUpdates(fm, fm.primaryNavigationFragment!!, -1)
+		triggerUIUpdates(fm, fm.primaryNavigationFragment, -1)
 
 		AnalyticsManager.i().reportFragmentChanged(fm.primaryNavigationFragment)
 
 		return true
 	}
 
-	private fun triggerUIUpdates(fm: FragmentManager, fragment: Fragment, direction: Int) {
+	private fun triggerUIUpdates(fm: FragmentManager, fragment: Fragment?, direction: Int) {
 		val c = fm.backStackEntryCount + direction
 
 		val actionBar = supportActionBar!!
@@ -316,7 +335,9 @@ open class NavActivity :
 		findViewById<View>(R.id.onScreenSettings).visibility = if (c == 0) View.VISIBLE else View.GONE
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))
-			mViewPermissionsWarning!!.visibility = if (c == 0) View.VISIBLE else View.GONE
+			mViewPermissionsWarning.visibility = if (c == 0) View.VISIBLE else View.GONE
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isBatteryOptimized())
+			mViewBatteryWarning.visibility = if (c == 0) View.VISIBLE else View.GONE
 
 		val fab = mFab ?: return
 		if (fragment is IUxController)
@@ -338,5 +359,6 @@ open class NavActivity :
 
 	companion object {
 		private const val ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5432
+		private const val ACTION_IGNORE_BATTERY_OPTIMIZATION_PERMISSION_REQUEST_CODE = 5433
 	}
 }

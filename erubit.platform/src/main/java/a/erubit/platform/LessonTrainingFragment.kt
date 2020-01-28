@@ -1,6 +1,5 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
-import a.erubit.platform.R
 import a.erubit.platform.course.CourseManager
 import a.erubit.platform.course.lesson.Lesson
 import a.erubit.platform.interaction.InteractionManager
@@ -35,10 +34,6 @@ class LessonTrainingFragment : TrainingFragment() {
 				return null
 
 			val pd = presentables[mPresentableIndex]
-			val v = InteractionManager.i().populate(context!!, mLesson, pd, this)
-				?: return null
-			v.findViewById<View>(R.id.quickButtonBar).visibility = View.GONE
-
-			return v
+			return InteractionManager.i().populate(context!!, mLesson, pd, this)
 		}
 }
