@@ -12,11 +12,11 @@
 
     <application>
         <activity
-            android:name=".android.NavActivity"
+            android:name=".NavActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
 
         <service
-            android:name=".android.InteractionService"
+            android:name=".InteractionService"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
     </application>
 

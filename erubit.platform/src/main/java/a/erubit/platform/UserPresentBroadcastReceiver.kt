@@ -1,4 +1,4 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
 import android.content.BroadcastReceiver
 import android.content.Context

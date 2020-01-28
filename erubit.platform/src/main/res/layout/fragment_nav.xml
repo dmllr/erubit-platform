@@ -5,7 +5,7 @@
     android:id="@+id/content_nav"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="a.erubit.platform.android.CoursesFragment"
+    tools:context="a.erubit.platform.CoursesFragment"
     tools:showIn="@layout/activity_content">
 
     <androidx.core.widget.NestedScrollView

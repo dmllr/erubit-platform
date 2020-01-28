@@ -1,7 +1,6 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
-import a.erubit.platform.R
-import a.erubit.platform.android.LessonsFragment.OnLessonInteractionListener
+import a.erubit.platform.LessonsFragment.OnLessonInteractionListener
 import a.erubit.platform.course.*
 import a.erubit.platform.course.CourseManager
 import a.erubit.platform.course.lesson.BunchLesson
@@ -116,14 +115,14 @@ class ProgressFragment : Fragment() {
 		private inner class HeaderItem internal constructor(val mLesson: Lesson) : ListItem() {
 			val mName: String? = mLesson.name
 			override val type: Int
-				get() = Companion.HEADER
+				get() = HEADER
 
 		}
 
 
 		private inner class ContentItem internal constructor(val mText: String, val mKnowledge: String) : ListItem() {
 			override val type: Int
-				get() = Companion.CONTENT
+				get() = CONTENT
 		}
 
 

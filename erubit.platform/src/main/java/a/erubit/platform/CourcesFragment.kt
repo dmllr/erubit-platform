@@ -1,6 +1,5 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
-import a.erubit.platform.R
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
 
@@ -90,7 +89,7 @@ class CoursesFragment : Fragment() {
 
 
 	internal interface OnCourseInteractionListener {
-		fun onCourseInteraction(course:Course, action:CourseInteractionAction)
+		fun onCourseInteraction(course:Course, action: CourseInteractionAction)
 	}
 
 

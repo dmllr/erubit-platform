@@ -1,12 +1,11 @@
-package a.erubit.platform.android
+package a.erubit.platform
 
-import a.erubit.platform.R
-import a.erubit.platform.android.CoursesFragment.CourseInteractionAction
-import a.erubit.platform.android.CoursesFragment.OnCourseInteractionListener
-import a.erubit.platform.android.LessonsFragment.LessonInteractionAction
-import a.erubit.platform.android.LessonsFragment.OnLessonInteractionListener
-import a.erubit.platform.android.TrainingFragment.OnTrainingInteractionListener
-import a.erubit.platform.android.TrainingFragment.TrainingInteractionAction
+import a.erubit.platform.CoursesFragment.CourseInteractionAction
+import a.erubit.platform.CoursesFragment.OnCourseInteractionListener
+import a.erubit.platform.LessonsFragment.LessonInteractionAction
+import a.erubit.platform.LessonsFragment.OnLessonInteractionListener
+import a.erubit.platform.TrainingFragment.OnTrainingInteractionListener
+import a.erubit.platform.TrainingFragment.TrainingInteractionAction
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
 import a.erubit.platform.course.lesson.Lesson

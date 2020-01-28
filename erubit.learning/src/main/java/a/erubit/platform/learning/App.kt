@@ -23,7 +23,7 @@ import u.C
 import u.U
 
 
-abstract class App : a.erubit.platform.android.App() {
+abstract class App : a.erubit.platform.App() {
 
 	fun initialize(i: Initializer) {
 		i.registerLessons()
@@ -33,7 +33,7 @@ abstract class App : a.erubit.platform.android.App() {
 	}
 
 
-	abstract inner class Initializer : a.erubit.platform.android.App.Initializer() {
+	abstract inner class Initializer : a.erubit.platform.App.Initializer() {
 		override fun registerLessons() {
 			super.registerLessons()
 
