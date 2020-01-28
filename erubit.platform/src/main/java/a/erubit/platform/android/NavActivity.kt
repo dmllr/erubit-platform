@@ -350,15 +350,14 @@ open class NavActivity :
 
 		fm.popBackStack()
 
-		if (null != fm.primaryNavigationFragment)
-			triggerUIUpdates(fm, fm.primaryNavigationFragment!!, -1)
+		triggerUIUpdates(fm, fm.primaryNavigationFragment, -1)
 
 		AnalyticsManager.i().reportFragmentChanged(fm.primaryNavigationFragment)
 
 		return true
 	}
 
-	private fun triggerUIUpdates(fm: FragmentManager, fragment: Fragment, direction: Int) {
+	private fun triggerUIUpdates(fm: FragmentManager, fragment: Fragment?, direction: Int) {
 		val c = fm.backStackEntryCount + direction
 
 		val actionBar = supportActionBar!!
