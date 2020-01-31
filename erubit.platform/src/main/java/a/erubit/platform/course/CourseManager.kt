@@ -108,14 +108,14 @@ class CourseManager private constructor() {
 	}
 
 	fun getNextLesson(): Lesson? {
-		val size = mActiveCourses.size
-		if (size < 1)
-			return null
+		for (course in mActiveCourses) {
+			for (l in course.lessons.values) {
+				if (l.hasInteraction())
+					return l
+			}
+		}
 
-		val i = Random().nextInt(mActiveCourses.size)
-		val course = mActiveCourses[i]
-
-		return getNextLesson(course)
+		return null
 	}
 
 	fun getNextLesson(course: Course): Lesson? {
