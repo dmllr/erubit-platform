@@ -31,6 +31,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
 import t.TinyDB
 import u.C
@@ -324,6 +325,14 @@ open class NavActivity :
 		return true
 	}
 
+	open fun toolbarVisibleInPrinciple(id: Int): Boolean {
+		return when(id) {
+			R.id.permissionsWarning -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)
+			R.id.batteryWarning -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isBatteryOptimized()
+			else -> true
+		}
+	}
+
 	private fun triggerUIUpdates(fm: FragmentManager, fragment: Fragment?, direction: Int) {
 		val c = fm.backStackEntryCount + direction
 
@@ -331,13 +340,17 @@ open class NavActivity :
 		actionBar.setDisplayHomeAsUpEnabled(c > 0)
 		actionBar.setDisplayShowHomeEnabled(c > 0)
 
-		findViewById<View>(R.id.main_backdrop).visibility = if (c == 0) View.VISIBLE else View.GONE
-		findViewById<View>(R.id.onScreenSettings).visibility = if (c == 0) View.VISIBLE else View.GONE
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this))
-			mViewPermissionsWarning.visibility = if (c == 0) View.VISIBLE else View.GONE
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isBatteryOptimized())
-			mViewBatteryWarning.visibility = if (c == 0) View.VISIBLE else View.GONE
+		val visibility = if (c == 0) View.VISIBLE else View.GONE
+		val appBarLayout = findViewById<ViewGroup>(R.id.main_appBarLayout)
+		for (i in 0 until appBarLayout.childCount) {
+			val v = appBarLayout.getChildAt(i)
+			when(v.id) {
+				R.id.main_collapsing -> v.findViewById<View>(R.id.main_backdrop).visibility = visibility
+				R.id.toolbar -> v.findViewById<View>(R.id.onScreenSettings).visibility = visibility
+				else -> if (toolbarVisibleInPrinciple(v.id))
+					v.visibility = visibility
+			}
+		}
 
 		val fab = mFab ?: return
 		if (fragment is IUxController)

@@ -10,6 +10,7 @@
     tools:context="a.erubit.platform.NavActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/main.appBarLayout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:fitsSystemWindows="true"
