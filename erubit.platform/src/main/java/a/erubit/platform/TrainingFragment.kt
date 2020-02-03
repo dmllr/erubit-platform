@@ -29,6 +29,7 @@ abstract class TrainingFragment : Fragment(), InteractionListener, IUxController
 		super.onViewCreated(view, savedInstanceState)
 
 		switchView()
+		mListener?.onTrainingInteraction(TrainingInteractionAction.STARTED)
 	}
 
 	override fun onInteraction(event: InteractionEvent) {
@@ -64,6 +65,7 @@ abstract class TrainingFragment : Fragment(), InteractionListener, IUxController
 
 
 	enum class TrainingInteractionAction {
+		STARTED,
 		FINISHED
 	}
 
