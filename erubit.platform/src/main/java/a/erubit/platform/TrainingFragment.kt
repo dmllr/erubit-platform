@@ -14,7 +14,7 @@ import android.widget.ViewAnimator
 
 
 abstract class TrainingFragment : Fragment(), InteractionListener, IUxController {
-	private var mViewAnimator: ViewAnimator? = null
+	private lateinit var mViewAnimator: ViewAnimator
 	private var mListener: OnTrainingInteractionListener? = null
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,9 +53,8 @@ abstract class TrainingFragment : Fragment(), InteractionListener, IUxController
 		val parent = view.parent as ViewGroup?
 		parent?.removeView(view)
 
-		val animator = mViewAnimator ?: return
-		animator.removeAllViews()
-		animator.addView(view)
+		mViewAnimator.removeAllViews()
+		mViewAnimator.addView(view)
 	}
 
 	protected abstract val nextInteractionView: View?
