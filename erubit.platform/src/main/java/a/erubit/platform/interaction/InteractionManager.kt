@@ -63,10 +63,6 @@ class InteractionManager private constructor() {
 		return null
 	}
 
-	fun getLastInteractionView(context: Context, listener: InteractionListener): View? {
-		return i().populate(context, mLastViewData!!.mLesson, mLastViewData!!.mPresentableDescription, listener)
-	}
-
 	fun populate(context: Context, lesson: Lesson?, pd: PresentableDescriptor, listener: InteractionListener): View? {
 		if (lesson == null || pd.mStatus !== Lesson.Status.OK)
 			return null
