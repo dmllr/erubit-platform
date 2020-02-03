@@ -141,6 +141,6 @@ class LessonsFragment : Fragment() {
 	}
 
 	internal interface OnLessonInteractionListener {
-		fun onLessonInteraction(lesson: Lesson?, action: LessonInteractionAction?)
+		fun onLessonInteraction(lesson: Lesson?, action: LessonInteractionAction)
 	}
 }

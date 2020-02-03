@@ -268,7 +268,7 @@ open class NavActivity :
 		}
 	}
 
-	override fun onLessonInteraction(lesson: Lesson?, action: LessonInteractionAction?) {
+	override fun onLessonInteraction(lesson: Lesson?, action: LessonInteractionAction) {
 		val bundle = Bundle()
 		bundle.putString("id", lesson!!.course.id)
 		bundle.putString("lesson_id", lesson.id)
