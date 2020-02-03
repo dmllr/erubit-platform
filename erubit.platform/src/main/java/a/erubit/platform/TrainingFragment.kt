@@ -46,7 +46,7 @@ abstract class TrainingFragment : Fragment(), InteractionListener, IUxController
 	private fun switchView() {
 		val view = nextInteractionView
 		if (view == null) {
-			mListener!!.onTrainingInteraction(TrainingInteractionAction.FINISHED)
+			mListener?.onTrainingInteraction(TrainingInteractionAction.FINISHED)
 			return
 		}
 
