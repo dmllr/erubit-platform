@@ -27,9 +27,8 @@ abstract class App : a.erubit.platform.App() {
 
 	fun initialize(i: Initializer) {
 		i.registerLessons()
-		CourseManager.i().initialize(applicationContext, i.resolveContentsResource())
-		InteractionManager.i().initialize(applicationContext)
-		AnalyticsManager.i().initialize(applicationContext)
+
+		super.initialize(i)
 	}
 
 
