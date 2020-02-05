@@ -93,10 +93,6 @@ class InteractionManager private constructor() {
 		lessonInflaters[type] = lessonInflater
 	}
 
-	fun onConfigurationChanged(context: Context) {
-		createInteractionViews(context)
-	}
-
 
 	class SetLessonFullStackAdapter(viewVariants: View, viewExplanation: View) : BaseAdapter() {
 		private val mViewVariants: View = viewVariants
