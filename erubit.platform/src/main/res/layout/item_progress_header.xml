@@ -15,7 +15,7 @@
         android:textColor="@color/colorTextPrimary"
         android:layout_margin="@dimen/general_margin"/>
 
-    <Button style="?android:attr/buttonBarButtonStyle"
+    <Button style="@style/Widget.MaterialComponents.Button.TextButton"
         android:id="@android:id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -30,20 +30,15 @@
                     android:layout_height="match_parent"
                     android:layout_above="@android:id/content"
                     android:gravity="center" />
-                <FrameLayout style="?android:attr/buttonBarStyle"
-                    android:id="@android:id/content"
-                    android:layout_width="match_parent"
+
+                <Button style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:id="@+id/button_practice"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true">
-                    <Button style="?android:attr/buttonBarButtonStyle"
-                        android:id="@+id/button_practice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/practice"
-                        android:textColor="?attr/colorAccent"
-                        android:layout_margin="@dimen/general_margin"
-                        android:layout_gravity="center"/>
-                </FrameLayout>
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/general_margin"
+                    android:text="@string/practice" />
             </RelativeLayout>
             <ProgressBar style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                          android:id="@android:id/progress"
