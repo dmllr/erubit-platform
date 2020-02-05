@@ -13,6 +13,8 @@ abstract class App : Application() {
 	override fun onCreate() {
 		super.onCreate()
 
+		applicationContext.setTheme(R.style.AppTheme)
+
 		applicationContext.registerReceiver(
 			UserPresentBroadcastReceiver(),
 				IntentFilter(Intent.ACTION_USER_PRESENT))
