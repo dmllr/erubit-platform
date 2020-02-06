@@ -105,8 +105,8 @@ abstract class BunchLesson(course: Course) : Lesson(course) {
 			progress.nextInteractionDate = 0
 		else if (hasSomething)
 			progress.nextInteractionDate = System.currentTimeMillis() + timeToForget
-		progress.interactionDate = mProgress!!.interactionDate
-		progress.trainDate = mProgress!!.trainDate
+		progress.interactionDate = System.currentTimeMillis()
+		progress.trainDate = System.currentTimeMillis()
 
 		for (k in 0 until size) {
 			val c = mSet!![k]
