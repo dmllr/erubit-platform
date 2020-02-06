@@ -3,6 +3,7 @@ package a.erubit.platform
 
 import a.erubit.platform.course.Course
 import a.erubit.platform.course.CourseManager
+import a.erubit.platform.course.Progress
 import a.erubit.platform.course.lesson.Lesson
 
 import android.content.Context
@@ -55,7 +56,7 @@ class LessonsFragment : Fragment() {
 		val id = arguments!!.getString("id") ?: return
 		val course = CourseManager.i().getCourse(id) ?: return
 		val listView = mListView ?: return
-		val adapter = LessonsListAdapter(course)
+		val adapter = LessonsListAdapter(context!!, course)
 
 		listView.adapter = adapter
 
@@ -90,8 +91,9 @@ class LessonsFragment : Fragment() {
 	}
 
 
-	internal inner class LessonsListAdapter(course: Course) : RecyclerView.Adapter<LessonsListAdapter.ViewHolder>() {
+	internal inner class LessonsListAdapter(context: Context, course: Course) : RecyclerView.Adapter<LessonsListAdapter.ViewHolder>() {
 		private val mList = ArrayList(course.lessons.values)
+		private val mContext = context
 
 		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 			val inflater = LayoutInflater.from(parent.context)
@@ -108,9 +110,9 @@ class LessonsFragment : Fragment() {
 
 		override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 			holder.mLesson = mList[position]
-			val progress = holder.mLesson!!.mProgress
+			val progress = holder.mLesson!!.getProgress(mContext)
 			holder.textTitle.text = holder.mLesson!!.name
-			holder.progressCourse.secondaryProgress = progress!!.familiarity
+			holder.progressCourse.secondaryProgress = progress.familiarity
 			holder.btnPractice.visibility = if (progress.interactionDate > 0) View.VISIBLE else View.GONE
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) holder.progressCourse.setProgress(progress.progress, true) else holder.progressCourse.progress = progress.progress
 		}

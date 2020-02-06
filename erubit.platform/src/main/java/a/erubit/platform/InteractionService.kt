@@ -145,7 +145,7 @@ class InteractionService : Service(), InteractionListener {
 
 			listener.onInteraction(event)
 
-			val progress = lesson.mProgress!!
+			val progress = lesson.getProgress(context)
 			if (progress.interactionDate == 0L) {
 				progress.interactionDate = System.currentTimeMillis()
 				ProgressManager.i().save(context, lesson)
